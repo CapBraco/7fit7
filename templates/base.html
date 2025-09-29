@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}7fit7{% endblock %}</title>
+</head>
+<body>
+    {% if not request.path == '/login/' %}
+    <nav>
+        {% if user.is_authenticated %}
+        <p>Bienvenido, {{ user.username }}!</p>
+        <form action="{% url 'logout' %}" method='post' >
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+        {% else %}
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'register' %}">Register</a>
+        {% endif %}
+    </nav>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+    
+</body>
+</html>
