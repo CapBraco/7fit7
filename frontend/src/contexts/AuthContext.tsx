@@ -61,6 +61,15 @@ export const useAuth = () => {
   return context;
 };
 
+// Helper function to set auth header
+const setAuthHeader = (token: string | null) => {
+  if (token) {
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  } else {
+    delete axios.defaults.headers.common['Authorization'];
+  }
+};
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [tokens, setTokens] = useState<AuthTokens | null>(null);
@@ -69,11 +78,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // Load user profile
   const loadUser = async (token: string) => {
     try {
-      const response = await axios.get(`${API_URL}/users/profile/`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      setAuthHeader(token);
+      const response = await axios.get(`${API_URL}/users/profile/`);
       setUser(response.data);
     } catch (error) {
       console.error('Failed to load user:', error);
@@ -83,34 +89,40 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Setup axios defaults
+  // Initialize - Check for existing tokens
   useEffect(() => {
-    const storedTokens = localStorage.getItem('tokens');
-    if (storedTokens && storedTokens !== 'undefined') {
-      try {
-        const parsedTokens = JSON.parse(storedTokens);
-        setTokens(parsedTokens);
-        axios.defaults.headers.common['Authorization'] = `Bearer ${parsedTokens.access}`;
-        loadUser(parsedTokens.access);
-      } catch (error) {
-        console.error('Failed to parse tokens:', error);
-        localStorage.removeItem('tokens');
+    const initAuth = () => {
+      const storedTokens = localStorage.getItem('tokens');
+      
+      if (storedTokens && storedTokens !== 'undefined') {
+        try {
+          const parsedTokens = JSON.parse(storedTokens);
+          console.log('Found stored tokens, loading user...');
+          setTokens(parsedTokens);
+          loadUser(parsedTokens.access);
+        } catch (error) {
+          console.error('Failed to parse stored tokens:', error);
+          localStorage.removeItem('tokens');
+          setLoading(false);
+        }
+      } else {
         setLoading(false);
       }
-    } else {
-      setLoading(false);
-    }
+    };
+
+    initAuth();
   }, []);
 
   // Login function
   const login = async (email: string, password: string) => {
     try {
+      console.log('Attempting login...');
       const response = await axios.post(`${API_URL}/users/auth/login/`, {
         email,
         password,
       });
 
-      console.log('Login response:', response.data); // DEBUG
+      console.log('Login response:', response.data);
 
       const { user: userData, tokens: tokenData } = response.data;
 
@@ -118,14 +130,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         throw new Error('Invalid response format from server');
       }
 
+      // Save to state
       setUser(userData);
       setTokens(tokenData);
+      
+      // Save to localStorage
       localStorage.setItem('tokens', JSON.stringify(tokenData));
-      axios.defaults.headers.common['Authorization'] = `Bearer ${tokenData.access}`;
+      console.log('Tokens saved to localStorage');
+      
+      // Set axios header
+      setAuthHeader(tokenData.access);
+      
       setLoading(false);
     } catch (error: any) {
       setLoading(false);
-      console.error('Login error details:', error.response?.data); // DEBUG
+      console.error('Login error:', error.response?.data);
       throw new Error(error.response?.data?.error || 'Login failed');
     }
   };
@@ -134,13 +153,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const register = async (data: RegisterData) => {
     try {
       const response = await axios.post(`${API_URL}/users/auth/register/`, data);
-
       const { user: userData, tokens: tokenData } = response.data;
 
       setUser(userData);
       setTokens(tokenData);
       localStorage.setItem('tokens', JSON.stringify(tokenData));
-      axios.defaults.headers.common['Authorization'] = `Bearer ${tokenData.access}`;
+      setAuthHeader(tokenData.access);
       setLoading(false);
     } catch (error: any) {
       setLoading(false);
@@ -154,10 +172,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // Logout function
   const logout = () => {
+    console.log('Logging out...');
     setUser(null);
     setTokens(null);
     localStorage.removeItem('tokens');
-    delete axios.defaults.headers.common['Authorization'];
+    setAuthHeader(null);
   };
 
   // Update user function
