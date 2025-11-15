@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Trash2, Search, X, ChevronDown, ChevronUp, Copy, GripVertical } from 'lucide-react';
-import { getExercises, createRoutine } from '../services/workoutService';
+import { Trash2, Search, X, ChevronDown, ChevronUp, Copy, GripVertical, Plus } from 'lucide-react';
+import { getExercises, createRoutine, createExercise } from '../services/workoutService';
 
 interface Exercise {
   id: number;
@@ -46,6 +46,14 @@ export const CreateRoutine = () => {
   const [expandedExercise, setExpandedExercise] = useState<number | null>(null);
   const [draggedSet, setDraggedSet] = useState<{ exerciseIdx: number; setIdx: number } | null>(null);
   const [editingSetName, setEditingSetName] = useState<{ exerciseIdx: number; setIdx: number } | null>(null);
+  const [showCreateExercise, setShowCreateExercise] = useState(false);
+  const [newExercise, setNewExercise] = useState({
+    name: '',
+    category: 'strength',
+    muscle_group: 'chest',
+    equipment: 'bodyweight',
+    description: '',
+  });
 
   useEffect(() => {
     loadExercises();
@@ -114,21 +122,48 @@ export const CreateRoutine = () => {
   };
 
   const toggleCustomSets = (index: number) => {
-    const updated = [...selectedExercises];
-    const exercise = updated[index];
-    exercise.use_custom_sets = !exercise.use_custom_sets;
-    
-    if (exercise.use_custom_sets) {
-      generateCustomSets(index, exercise.default_sets);
-      setExpandedExercise(index); // Auto-expand when enabling custom sets
-    } else {
-      exercise.custom_sets = [];
-      if (expandedExercise === index) {
-        setExpandedExercise(null);
-      }
-    }
-    
-    setSelectedExercises(updated);
+    setSelectedExercises(prev => {
+      const updated = prev.map((ex, i) => {
+        if (i !== index) return ex;
+        
+        const toggled = !ex.use_custom_sets;
+        
+        if (toggled) {
+          // Generate custom sets
+          const sets: CustomSet[] = [];
+          for (let i = 0; i < ex.default_sets; i++) {
+            sets.push({
+              set_number: i + 1,
+              reps: ex.default_reps,
+              weight: ex.default_weight,
+              rest_seconds: ex.default_rest_seconds,
+              notes: '',
+              set_name: '',
+            });
+          }
+          
+          setExpandedExercise(index);
+          
+          return {
+            ...ex,
+            use_custom_sets: true,
+            custom_sets: sets,
+          };
+        } else {
+          if (expandedExercise === index) {
+            setExpandedExercise(null);
+          }
+          
+          return {
+            ...ex,
+            use_custom_sets: false,
+            custom_sets: [],
+          };
+        }
+      });
+      
+      return updated;
+    });
   };
 
   const generateCustomSets = (exerciseIndex: number, numSets: number) => {
@@ -214,6 +249,34 @@ export const CreateRoutine = () => {
     }
     
     setDraggedSet(null);
+  };
+
+  const handleCreateExercise = async () => {
+    if (!newExercise.name.trim()) {
+      alert('Please enter an exercise name');
+      return;
+    }
+
+    try {
+      const createdExercise = await createExercise(newExercise);
+      // Add to exercises list
+      setExercises([...exercises, createdExercise]);
+      // Add to routine
+      addExercise(createdExercise);
+      // Reset form
+      setNewExercise({
+        name: '',
+        category: 'strength',
+        muscle_group: 'chest',
+        equipment: 'bodyweight',
+        description: '',
+      });
+      setShowCreateExercise(false);
+      setSearchTerm('');
+    } catch (error) {
+      console.error('Failed to create exercise:', error);
+      alert('Failed to create exercise. Please try again.');
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -331,21 +394,55 @@ export const CreateRoutine = () => {
             {showExercisePicker && searchTerm && (
               <div className="mb-4 max-h-64 overflow-y-auto border border-gray-200 rounded-lg bg-white shadow-lg">
                 {filteredExercises.length > 0 ? (
-                  filteredExercises.map((exercise) => (
+                  <>
+                    {filteredExercises.map((exercise) => (
+                      <button
+                        key={exercise.id}
+                        type="button"
+                        onClick={() => addExercise(exercise)}
+                        className="w-full text-left p-3 hover:bg-blue-50 transition border-b border-gray-100"
+                      >
+                        <h4 className="font-semibold text-gray-900">{exercise.name}</h4>
+                        <p className="text-sm text-gray-600">
+                          {exercise.muscle_group} • {exercise.equipment}
+                        </p>
+                      </button>
+                    ))}
+                    {/* Create custom exercise option */}
                     <button
-                      key={exercise.id}
                       type="button"
-                      onClick={() => addExercise(exercise)}
-                      className="w-full text-left p-3 hover:bg-blue-50 transition border-b border-gray-100 last:border-b-0"
+                      onClick={() => {
+                        setNewExercise({ ...newExercise, name: searchTerm });
+                        setShowCreateExercise(true);
+                      }}
+                      className="w-full text-left p-3 hover:bg-green-50 transition border-t-2 border-green-200 bg-green-50/50"
                     >
-                      <h4 className="font-semibold text-gray-900">{exercise.name}</h4>
-                      <p className="text-sm text-gray-600">
-                        {exercise.muscle_group} • {exercise.equipment}
-                      </p>
+                      <div className="flex items-center space-x-2">
+                        <Plus className="w-5 h-5 text-green-600" />
+                        <div>
+                          <h4 className="font-semibold text-green-700">Create "{searchTerm}"</h4>
+                          <p className="text-sm text-green-600">Add as custom exercise</p>
+                        </div>
+                      </div>
                     </button>
-                  ))
+                  </>
                 ) : (
-                  <p className="p-4 text-gray-600 text-center">No exercises found</p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setNewExercise({ ...newExercise, name: searchTerm });
+                      setShowCreateExercise(true);
+                    }}
+                    className="w-full text-left p-4 hover:bg-green-50 transition"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <Plus className="w-5 h-5 text-green-600" />
+                      <div>
+                        <h4 className="font-semibold text-gray-900">No results found</h4>
+                        <p className="text-sm text-green-600">Click to create "{searchTerm}" as custom exercise</p>
+                      </div>
+                    </div>
+                  </button>
                 )}
               </div>
             )}
@@ -377,65 +474,88 @@ export const CreateRoutine = () => {
                       </button>
                     </div>
 
-                    {/* Quick Settings (Always Visible) */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-3">
-                      <div>
-                        <label className="block text-xs text-gray-600 mb-1">Sets</label>
-                        <input
-                          type="number"
-                          value={ex.default_sets || ''}
-                          onChange={(e) =>
-                            updateExercise(index, 'default_sets', e.target.value)
-                          }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                          min="1"
-                          max="30"
-                        />
+                    {/* Quick Settings - Conditional Display */}
+                    {ex.use_custom_sets ? (
+                      /* When custom sets enabled: only show Sets field */
+                      <div className="mb-3">
+                        <div className="max-w-xs">
+                          <label className="block text-xs text-gray-600 mb-1">Sets</label>
+                          <input
+                            type="number"
+                            value={ex.default_sets || ''}
+                            onChange={(e) =>
+                              updateExercise(index, 'default_sets', e.target.value)
+                            }
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                            min="1"
+                            max="30"
+                          />
+                          <p className="text-xs text-gray-500 mt-1">
+                            Customize each set below
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <label className="block text-xs text-gray-600 mb-1">Reps</label>
-                        <input
-                          type="number"
-                          value={ex.default_reps || ''}
-                          onChange={(e) =>
-                            updateExercise(index, 'default_reps', e.target.value)
-                          }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                          min="1"
-                          max="999"
-                        />
+                    ) : (
+                      /* When custom sets disabled: show all fields */
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-3">
+                        <div>
+                          <label className="block text-xs text-gray-600 mb-1">Sets</label>
+                          <input
+                            type="number"
+                            value={ex.default_sets || ''}
+                            onChange={(e) =>
+                              updateExercise(index, 'default_sets', e.target.value)
+                            }
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                            min="1"
+                            max="30"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-gray-600 mb-1">Reps</label>
+                          <input
+                            type="number"
+                            value={ex.default_reps || ''}
+                            onChange={(e) =>
+                              updateExercise(index, 'default_reps', e.target.value)
+                            }
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                            min="1"
+                            max="999"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-gray-600 mb-1">Weight (kg)</label>
+                          <input
+                            type="number"
+                            value={ex.default_weight || ''}
+                            onChange={(e) =>
+                              updateExercise(index, 'default_weight', e.target.value)
+                            }
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                            min="0"
+                            max="999"
+                            step="0.5"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-gray-600 mb-1">Rest (sec)</label>
+                          <input
+                            type="number"
+                            value={ex.default_rest_seconds || ''}
+                            onChange={(e) =>
+                              updateExercise(index, 'default_rest_seconds', e.target.value)
+                            }
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                            min="0"
+                            max="600"
+                          />
+                        </div>
                       </div>
-                      <div>
-                        <label className="block text-xs text-gray-600 mb-1">Weight (kg)</label>
-                        <input
-                          type="number"
-                          value={ex.default_weight || ''}
-                          onChange={(e) =>
-                            updateExercise(index, 'default_weight', e.target.value)
-                          }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                          min="0"
-                          max="999"
-                          step="0.5"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs text-gray-600 mb-1">Rest (sec)</label>
-                        <input
-                          type="number"
-                          value={ex.default_rest_seconds || ''}
-                          onChange={(e) =>
-                            updateExercise(index, 'default_rest_seconds', e.target.value)
-                          }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                          min="0"
-                          max="600"
-                        />
-                      </div>
-                    </div>
+                    )}
 
                     {/* Customize Sets Toggle */}
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-2 mb-3">
                       <button
                         type="button"
                         onClick={() => toggleCustomSets(index)}
@@ -444,17 +564,20 @@ export const CreateRoutine = () => {
                         {ex.use_custom_sets ? '✓ Using custom sets' : '+ Customize each set'}
                       </button>
                       {ex.use_custom_sets && (
-                        <button
-                          type="button"
-                          onClick={() => setExpandedExercise(expandedExercise === index ? null : index)}
-                          className="text-blue-600 hover:text-blue-700"
-                        >
-                          {expandedExercise === index ? (
-                            <ChevronUp className="w-4 h-4" />
-                          ) : (
-                            <ChevronDown className="w-4 h-4" />
-                          )}
-                        </button>
+                        <>
+                          <span className="text-xs text-gray-500">({ex.custom_sets?.length || 0} sets)</span>
+                          <button
+                            type="button"
+                            onClick={() => setExpandedExercise(expandedExercise === index ? null : index)}
+                            className="text-blue-600 hover:text-blue-700"
+                          >
+                            {expandedExercise === index ? (
+                              <ChevronUp className="w-4 h-4" />
+                            ) : (
+                              <ChevronDown className="w-4 h-4" />
+                            )}
+                          </button>
+                        </>
                       )}
                     </div>
 
@@ -589,6 +712,136 @@ export const CreateRoutine = () => {
           </div>
         </form>
       </div>
+
+      {/* Create Exercise Modal */}
+      {showCreateExercise && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl max-w-md w-full p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-bold text-gray-900">Create Custom Exercise</h3>
+              <button
+                type="button"
+                onClick={() => setShowCreateExercise(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              {/* Name */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Exercise Name *
+                </label>
+                <input
+                  type="text"
+                  value={newExercise.name}
+                  onChange={(e) => setNewExercise({ ...newExercise, name: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                  placeholder="e.g., Dragon Flag"
+                  autoFocus
+                />
+              </div>
+
+              {/* Category */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Category
+                </label>
+                <select
+                  value={newExercise.category}
+                  onChange={(e) => setNewExercise({ ...newExercise, category: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                >
+                  <option value="strength">Strength Training</option>
+                  <option value="cardio">Cardio</option>
+                  <option value="flexibility">Flexibility</option>
+                  <option value="sports">Sports</option>
+                </select>
+              </div>
+
+              {/* Muscle Group */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Muscle Group
+                </label>
+                <select
+                  value={newExercise.muscle_group}
+                  onChange={(e) => setNewExercise({ ...newExercise, muscle_group: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                >
+                  <option value="chest">Chest</option>
+                  <option value="back">Back</option>
+                  <option value="shoulders">Shoulders</option>
+                  <option value="arms">Arms</option>
+                  <option value="legs">Legs</option>
+                  <option value="core">Core</option>
+                  <option value="full_body">Full Body</option>
+                  <option value="cardio">Cardio</option>
+                </select>
+              </div>
+
+              {/* Equipment */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Equipment
+                </label>
+                <select
+                  value={newExercise.equipment}
+                  onChange={(e) => setNewExercise({ ...newExercise, equipment: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                >
+                  <option value="bodyweight">Bodyweight</option>
+                  <option value="barbell">Barbell</option>
+                  <option value="dumbbell">Dumbbell</option>
+                  <option value="machine">Machine</option>
+                  <option value="cable">Cable</option>
+                  <option value="band">Resistance Band</option>
+                  <option value="kettlebell">Kettlebell</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              {/* Description (Optional) */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Description (Optional)
+                </label>
+                <textarea
+                  value={newExercise.description}
+                  onChange={(e) => setNewExercise({ ...newExercise, description: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                  rows={3}
+                  placeholder="Brief description of the exercise..."
+                />
+              </div>
+
+              {/* Buttons */}
+              <div className="flex space-x-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowCreateExercise(false)}
+                  className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCreateExercise}
+                  className="flex-1 px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium"
+                >
+                  Create & Add
+                </button>
+              </div>
+
+              <p className="text-xs text-gray-500 text-center">
+                This exercise will be saved to your custom exercises
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

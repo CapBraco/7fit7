@@ -59,6 +59,11 @@ export const likeRoutine = async (id: number) => {
   return response.data;
 };
 
+export const startWorkout = async (routineId: number) => {
+  const response = await axios.post(`${API_URL}/workouts/routines/${routineId}/start/`);
+  return response.data;
+};
+
 // ============= WORKOUT SESSIONS =============
 
 export const getSessions = async (params?: {
@@ -102,7 +107,11 @@ export const getSessionSets = async (sessionId: number) => {
 };
 
 export const createSet = async (sessionId: number, data: any) => {
-  const response = await axios.post(`${API_URL}/workouts/sessions/${sessionId}/sets/`, data);
+  const payload = {
+    ...data,
+    session: sessionId
+  };
+  const response = await axios.post(`${API_URL}/workouts/sessions/${sessionId}/sets/`, payload);
   return response.data;
 };
 

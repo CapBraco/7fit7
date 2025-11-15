@@ -5,6 +5,7 @@ from .views import (
     WorkoutRoutineListView,
     WorkoutRoutineDetailView,
     like_routine,
+    start_workout,  # ✅ ADD THIS
     WorkoutSessionListView,
     WorkoutSessionDetailView,
     complete_session,
@@ -22,7 +23,8 @@ urlpatterns = [
     path('routines/', WorkoutRoutineListView.as_view(), name='routine_list'),
     path('routines/<int:pk>/', WorkoutRoutineDetailView.as_view(), name='routine_detail'),
     path('routines/<int:pk>/like/', like_routine, name='like_routine'),
-    
+    path('routines/<int:pk>/start/', start_workout, name='start_workout'),  # ✅ FIX
+
     # Workout Sessions
     path('sessions/', WorkoutSessionListView.as_view(), name='session_list'),
     path('sessions/<int:pk>/', WorkoutSessionDetailView.as_view(), name='session_detail'),

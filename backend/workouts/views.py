@@ -214,6 +214,38 @@ class WorkoutSessionDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
+def start_workout(request, pk):
+    """
+    POST /api/workouts/routines/<id>/start/
+    Start a new workout session from a routine
+    """
+    routine = get_object_or_404(WorkoutRoutine, pk=pk)
+    user = request.user
+    
+    # Check access
+    if routine.user != user and not routine.is_public:
+        return Response(
+            {'error': 'You do not have permission to use this routine'},
+            status=status.HTTP_403_FORBIDDEN
+        )
+    
+    from django.utils import timezone
+    
+    # Create workout session
+    session = WorkoutSession.objects.create(
+        user=user,
+        routine=routine,
+        name=routine.name,
+        start_time=timezone.now(),
+        is_completed=False
+    )
+    
+    serializer = WorkoutSessionDetailSerializer(session)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
 def complete_session(request, pk):
     """
     POST /api/workouts/sessions/<id>/complete/
@@ -230,7 +262,7 @@ def complete_session(request, pk):
     # Update user stats
     user_stats = request.user.stats
     user_stats.total_workouts += 1
-    user_stats.total_volume += float(session.total_volume)
+    user_stats.total_volume += session.total_volume
     user_stats.last_workout_date = session.start_time.date()
     user_stats.save()
     
@@ -272,6 +304,7 @@ class ExerciseSetListCreateView(generics.ListCreateAPIView):
             user=self.request.user
         )
         serializer.save(session=session)
+    
 
 
 class ExerciseSetDetailView(generics.RetrieveUpdateDestroyAPIView):

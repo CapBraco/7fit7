@@ -85,7 +85,7 @@
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/YOUR_USERNAME/7fit7.git
+git clone https://github.com/CapBraco/7fit7.git
 cd 7fit7
 ```
 
