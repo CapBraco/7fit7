@@ -53,13 +53,21 @@
 - **public/** – Public assets for the Vite React app (images, favicon, etc.).  
 - **src/** – Main source code folder containing all React logic:  
   - **App.tsx & main.tsx** – Application entry points.  
-  - **components/** – Reusable UI components (Navbar, ProtectedRoute).  
+  - **components/** – Reusable UI components such as Navbar and ProtectedRoute.  
   - **contexts/** – Global state and JWT authentication (AuthContext).  
-  - **pages/** – Main app pages: Login, Register, Dashboard, Workouts, CreateRoutine, ActiveWorkout, WorkoutDetail, and History.  
+  - **pages/** – Main app pages:  
+    - **Login.tsx** – Login page for users.  
+    - **Register.tsx** – Registration page for new users.  
+    - **Dashboard.tsx** – Main user dashboard displaying overview and stats.  
+    - **Workouts.tsx** – View all available workouts and routines.  
+    - **CreateRoutine.tsx** – Create and customize workout routines, exercises, and sets.  
+    - **ActiveWorkout.tsx** – Track live workouts with timers and set-by-set logging.  
+    - **WorkoutDetail.tsx** – View detailed information of completed workouts.  
+    - **History.tsx** – Display user workout history and statistics.  
   - **services/** – API services for workouts, routines, and user data.  
 
 - **manage.py** – Django management commands (backend).  
-- **requirements.txt** – Python packages for backend.  
+- **requirements.txt** – Python packages for backend. 
 
 
 ## ▶️ How to Run the Application
