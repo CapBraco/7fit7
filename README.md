@@ -1,178 +1,169 @@
-# 🏋️ 7Fit7
+# 🏋️‍♂️ 7Fit7
+### A Performance-Focused Workout Tracking Platform (Django + React)
 
-> AI-powered fitness tracking platform with social features
+---
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![Django](https://img.shields.io/badge/Django-5.0+-green.svg)](https://www.djangoproject.com/)
-[![React](https://img.shields.io/badge/React-18+-61DAFB.svg)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5+-3178C6.svg)](https://www.typescriptlang.org/)
+## 📌 Distinctiveness and Complexity
 
-## 🎯 Overview
+7Fit7 is a full-stack workout performance platform built with **Django REST Framework** and **React + TypeScript**, designed specifically for structured strength training and exercise tracking. Unlike any project in the CS50W course, it is neither an e-commerce website nor a simple social network.
 
-7fit7 is a comprehensive fitness tracking application that combines intelligent workout planning, progress analytics, and community engagement. Built with Django REST Framework and React, it provides a seamless experience for fitness enthusiasts to track, optimize, and share their fitness journey.
+**Why it is distinct:**  
+- Focused on **real-time workout execution** and **set-by-set logging** rather than selling products or sharing posts.  
+- Features **nested relational models**: Users → Workouts → Exercises → Sessions → Sets, enabling complex workout tracking.  
+- Implements **customizable sets** per exercise with optional reps, weights, and rest timers.  
 
-## ✨ Key Features
+**Why it is complex:**  
+- Multi-level backend models with nested serializers and API endpoints.  
+- Dynamic workout runner on the frontend with state management (Zustand) and live updates (React Query).  
+- Rest timer logic integrated into active workout sessions.  
+- Workout history and stats tracking derived from completed sessions.  
+- Mobile-responsive design using Tailwind CSS.  
+- Fully Dockerized backend with SQLite for rapid setup.  
 
-### 🎪 Workout Management
-- Create and customize workout routines
-- Real-time workout logging with timers
-- Exercise library with detailed instructions
-- Progressive overload tracking
-- Rest time optimization
+These aspects demonstrate advanced full-stack development and justify the project’s distinctiveness and complexity compared to other CS50W projects.
 
-### 📊 Progress Analytics
-- Visual progress tracking with charts
-- AI-powered recommendations
-- Volume and intensity analytics
-- Personal record tracking
-- Body part specific insights
+---
 
-### 🍎 Nutrition Tracking
-- Calorie and macro tracking
-- Food database integration
-- Meal planning
-- Hydration monitoring
+## 🎯 Current Functionality
 
-### 😴 Recovery Tracking
-- Sleep logging and analysis
-- Recovery recommendations
-- Rest day suggestions
+### **Week 1 – Foundations**
+✅ User authentication (JWT)  
+✅ User profiles  
 
-### 👥 Social Features
-- Share routines with community
-- Progress updates with media
-- Like, comment, and rate workouts
-- Follow other users
-- Community challenges
+### **Week 2 – Workout Structure**
+✅ Exercise library  
+✅ Create workout routines  
+✅ Customize sets per exercise (reps, weight, rest)  
 
-## 🏗️ Tech Stack
+### **Week 3 – Training & Performance**
+✅ Active workout tracking  
+✅ Rest timer in workout view  
+✅ Complete and save workouts  
+✅ Workout history  
+✅ Detailed workout breakdown  
+✅ Basic stats tracking (volume, sets, reps)  
 
-### Backend
-- **Framework:** Django 5.0 + Django REST Framework
-- **Database:** PostgreSQL 15
-- **Cache:** Redis
-- **Task Queue:** Celery
-- **Authentication:** JWT (djangorestframework-simplejwt)
-- **API Documentation:** drf-spectacular (OpenAPI 3.0)
+These features form a complete MVP-level application for strength training tracking.
 
-### Frontend
-- **Framework:** React 18 + TypeScript
-- **Build Tool:** Vite
-- **State Management:** Zustand
-- **Data Fetching:** TanStack Query (React Query)
-- **Styling:** Tailwind CSS
-- **Charts:** Recharts
-- **Icons:** Lucide React
-- **Routing:** React Router v6
+---
 
-### DevOps
-- **Containerization:** Docker + Docker Compose
-- **CI/CD:** GitHub Actions
-- **Code Quality:** ESLint, Prettier, Black, Flake8
-- **Testing:** Jest, React Testing Library, Pytest
+## 📁 File & Folder Structure
 
-## 🚀 Quick Start
+### **Backend**
+backend/
+├─ config/ (Django configuration)
+│ ├─ asgi.py
+│ ├─ settings.py
+│ ├─ urls.py
+│ └─ wsgi.py
+├─ nutrition/ (planned extension for nutrition tracking)
+│ ├─ admin.py
+│ ├─ apps.py
+│ ├─ models.py
+│ ├─ views.py
+│ └─ migrations/
+├─ social/ (planned extension for social features)
+│ ├─ admin.py
+│ ├─ apps.py
+│ ├─ models.py
+│ ├─ views.py
+│ └─ migrations/
+├─ users/ (authentication and user profiles)
+│ ├─ admin.py
+│ ├─ apps.py
+│ ├─ models.py
+│ ├─ serializers.py
+│ ├─ urls.py
+│ └─ views.py
+├─ static/ (static assets such as CSS, images)
+├─ media/ (uploaded media files)
 
-### Prerequisites
-- Python 3.11+
-- Node.js 18+
-- PostgreSQL 15+
-- Redis 7+
-- Docker & Docker Compose (recommended)
+markdown
+Copy code
 
-### Installation
+### **Frontend**
+frontend/
+├─ public/ (public assets for Vite)
+├─ src/
+│ ├─ App.tsx (main React application)
+│ ├─ main.tsx (application entry point)
+│ ├─ components/
+│ │ ├─ Navbar.tsx (navigation bar)
+│ │ └─ ProtectedRoute.tsx (authentication guard)
+│ ├─ contexts/
+│ │ └─ AuthContext.tsx (JWT authentication context)
+│ ├─ pages/
+│ │ ├─ Login.tsx (login page)
+│ │ ├─ Register.tsx (registration page)
+│ │ ├─ Dashboard.tsx (main user dashboard)
+│ │ ├─ Workouts.tsx (view all workouts)
+│ │ ├─ CreateRoutine.tsx (create and customize routines, exercises, and sets)
+│ │ ├─ ActiveWorkout.tsx (track active training sessions)
+│ │ ├─ WorkoutDetail.tsx (view completed workout data)
+│ │ └─ History.tsx (historical workouts and statistics)
+│ └─ services/
+│ └─ workoutService.ts (handles API calls for exercises and routines)
+├─ manage.py (Django management commands)
+└─ requirements.txt (Python packages and frameworks)
 
-1. **Clone the repository**
+markdown
+Copy code
+
+### **Other Files**
+- `.gitignore` – Ignored files for git  
+- `docker-compose.yml` – Database container setup  
+- `LICENSE` – MIT license  
+- `README.md` – Project documentation  
+
+---
+
+## ▶️ How to Run the Application
+
+### **Prerequisites**
+- Python 3.11+  
+- Node.js 18+  
+- SQLite (bundled with Django)  
+- Docker (optional for database and media)
+
+### **1. Clone the repo**
 ```bash
 git clone https://github.com/CapBraco/7fit7.git
 cd 7fit7
-```
-
-2. **Start Docker services** (Database & Redis)
-```bash
+2. Start Docker services (optional)
+bash
+Copy code
 docker-compose up -d
-```
-
-3. **Backend Setup**
-```bash
+3. Backend Setup
+bash
+Copy code
 cd backend
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+venv\Scripts\activate       # Windows
 pip install -r requirements.txt
 python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver
-```
-
-4. **Frontend Setup**
-```bash
-cd frontend
+4. Frontend Setup
+bash
+Copy code
+cd src
 npm install
 npm run dev
-```
+Access
+Frontend: http://localhost:5173
 
-5. **Access the application**
-- Frontend: http://localhost:5173
-- Backend API: http://localhost:8000/api
-- Admin Panel: http://localhost:8000/admin
-- API Docs: http://localhost:8000/api/schema/swagger-ui/
+API: http://localhost:8000/api
 
-## 📖 Documentation
+Admin Panel: http://localhost:8000/admin
 
-- [Setup Guide](docs/SETUP.md) - Detailed installation instructions
-- [API Documentation](docs/API.md) - API endpoints and usage
-- [Contributing Guide](docs/CONTRIBUTING.md) - How to contribute
+📌 Additional Notes for Staff
+The project demonstrates multi-level relational models and nested API endpoints.
 
-## 🗺️ Roadmap
+Active workout sessions update the backend in real-time and include rest timers.
 
-### Phase 1: MVP (Weeks 1-4)
-- [x] Project setup
-- [ ] User authentication
-- [ ] Workout CRUD operations
-- [ ] Basic workout logging
-- [ ] Progress dashboard
+Full mobile responsiveness is implemented.
 
-### Phase 2: Intelligence (Weeks 5-8)
-- [ ] AI recommendations
-- [ ] Nutrition tracking
-- [ ] Sleep tracking
-- [ ] Advanced analytics
+A demonstration video shows all current features listed above.
 
-### Phase 3: Social (Weeks 9-12)
-- [ ] Social feed
-- [ ] Workout sharing
-- [ ] Community features
-- [ ] Challenges & achievements
-
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guide](docs/CONTRIBUTING.md) for details.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 👥 Authors
-
-- **CapBraco** - *Initial work* - [YourGitHub](https://github.com/CapBraco)
-git
-## 🙏 Acknowledgments
-
-- Django REST Framework team
-- React community
-- All contributors
-
-## 📧 Contact
-
-Project Link: [https://github.com/CapBraco/7fit7](https://github.com/CapBraco/7fit7)
-
----
-
-**Built with ❤️ for the fitness community**
+🧾 License
+MIT License
