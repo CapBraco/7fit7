@@ -30,8 +30,6 @@ interface SetLog {
   reps: number;
   weight: number;
   completed: boolean;
-  rest_seconds?: number;
-  duration_seconds?: number;
 }
 
 export const ActiveWorkout = () => {
@@ -44,6 +42,7 @@ export const ActiveWorkout = () => {
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [sets, setSets] = useState<SetLog[]>([]);
   const [loading, setLoading] = useState(true);
+  const [workoutDuration, setWorkoutDuration] = useState(0);
   
   // Timer state
   const [isResting, setIsResting] = useState(false);
@@ -53,6 +52,19 @@ export const ActiveWorkout = () => {
   useEffect(() => {
     initWorkout();
   }, [routineId]);
+
+  // Workout duration timer
+  useEffect(() => {
+    if (session) {
+      const interval = setInterval(() => {
+        const startTime = new Date(session.start_time).getTime();
+        const now = new Date().getTime();
+        const durationInSeconds = Math.floor((now - startTime) / 1000);
+        setWorkoutDuration(durationInSeconds);
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [session]);
 
   useEffect(() => {
     let interval: any;
@@ -70,12 +82,16 @@ export const ActiveWorkout = () => {
   const initWorkout = async () => {
     try {
       setLoading(true);
+      // Get routine details
       const routineData = await getRoutine(Number(routineId));
       setRoutine(routineData);
       setExercises(routineData.exercises);
 
+      // Start workout session
       const sessionData = await startWorkout(Number(routineId));
       setSession(sessionData);
+
+      // Initialize sets for first exercise
       if (routineData.exercises.length > 0) {
         initializeSetsForExercise(routineData.exercises[0]);
       }
@@ -97,8 +113,6 @@ export const ActiveWorkout = () => {
         reps: exercise.default_reps,
         weight: exercise.default_weight,
         completed: false,
-        rest_seconds: exercise.default_rest_seconds,
-        duration_seconds: 0, // optional, can track actual set duration later
       });
     }
     setSets(newSets);
@@ -113,34 +127,28 @@ export const ActiveWorkout = () => {
 
   const completeSet = async (index: number) => {
     const set = sets[index];
-
+    
     try {
-      const payload: any = {
-        exercise: set.exercise,   // number
+      // Save set to backend
+      const savedSet = await createSet(session.id, {
+        exercise: set.exercise,
         set_number: set.set_number,
         reps: set.reps,
         weight: set.weight,
-        rest_seconds: set.rest_seconds,
-        duration_seconds: set.duration_seconds,
-        };
+      });
 
-
-      if (set.rest_seconds !== undefined) payload.rest_seconds = set.rest_seconds;
-      if (set.duration_seconds !== undefined) payload.duration_seconds = set.duration_seconds;
-
-      const savedSet = await createSet(session.id, payload);
-      
-
+      // Mark as completed
       const updated = [...sets];
       updated[index] = { ...updated[index], completed: true, id: savedSet.id };
       setSets(updated);
 
+      // Start rest timer if not last set
       if (index < sets.length - 1) {
         setRestTimeLeft(restDuration);
         setIsResting(true);
       }
-    } catch (error: any) {
-      console.error('Failed to save set:', error.response || error);
+    } catch (error) {
+      console.error('Failed to save set:', error);
       alert('Failed to save set');
     }
   };
@@ -160,8 +168,6 @@ export const ActiveWorkout = () => {
         reps: lastSet.reps,
         weight: lastSet.weight,
         completed: false,
-        rest_seconds: lastSet.rest_seconds,
-        duration_seconds: 0,
       },
     ]);
   };
@@ -183,7 +189,9 @@ export const ActiveWorkout = () => {
   };
 
   const finishWorkout = async () => {
-    if (!window.confirm('Are you sure you want to finish this workout?')) return;
+    if (!window.confirm('Are you sure you want to finish this workout?')) {
+      return;
+    }
 
     try {
       await completeSession(session.id);
@@ -192,6 +200,12 @@ export const ActiveWorkout = () => {
       console.error('Failed to complete workout:', error);
       alert('Failed to complete workout');
     }
+  };
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   if (loading) {
@@ -209,19 +223,21 @@ export const ActiveWorkout = () => {
     <div className="min-h-screen bg-gray-900 text-white">
       {/* Header */}
       <div className="bg-gray-800 border-b border-gray-700 p-4">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold">{routine?.name}</h1>
-            <p className="text-gray-400 text-sm">
-              Exercise {currentExerciseIndex + 1} of {exercises.length}
-            </p>
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold">{routine?.name}</h1>
+              <p className="text-gray-400 text-sm">
+                Exercise {currentExerciseIndex + 1} of {exercises.length}
+              </p>
+            </div>
+            <button
+              onClick={finishWorkout}
+              className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg font-semibold transition"
+            >
+              Finish Workout
+            </button>
           </div>
-          <button
-            onClick={finishWorkout}
-            className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg font-semibold transition"
-          >
-            Finish Workout
-          </button>
         </div>
       </div>
 

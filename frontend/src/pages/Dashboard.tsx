@@ -1,15 +1,46 @@
+import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { Link } from 'react-router-dom';
 import { 
   Dumbbell, 
   TrendingUp, 
   Target, 
   Users,
   Calendar,
-  Flame
+  Flame,
+  Clock,
+  ChevronRight
 } from 'lucide-react';
+import { getSessions } from '../services/workoutService';
 
 export const Dashboard = () => {
   const { user } = useAuth();
+  const [recentWorkouts, setRecentWorkouts] = useState<any[]>([]);
+
+  useEffect(() => {
+    loadRecentWorkouts();
+  }, []);
+
+  const loadRecentWorkouts = async () => {
+    try {
+      const data = await getSessions({ is_completed: true });
+      setRecentWorkouts(data.slice(0, 3)); // Get last 3 workouts
+    } catch (error) {
+      console.error('Failed to load recent workouts:', error);
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const today = new Date();
+    const diffTime = Math.abs(today.getTime() - date.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) return 'Today';
+    if (diffDays === 1) return 'Yesterday';
+    if (diffDays < 7) return `${diffDays} days ago`;
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  };
 
   const stats = [
     {

@@ -8,6 +8,8 @@ import { Dashboard } from './pages/Dashboard';
 import { Workouts } from './pages/Workouts';
 import { CreateRoutine } from './pages/CreateRoutine';
 import { ActiveWorkout } from './pages/ActiveWorkout';
+import { History } from './pages/History';
+import { WorkoutDetail } from './pages/WorkoutDetail';
 
 function App() {
   return (
@@ -30,7 +32,8 @@ function App() {
                     <Route path="/workouts" element={<Workouts />} />
                     <Route path="/workouts/create" element={<CreateRoutine />} />
                     <Route path="/workouts/active/:routineId" element={<ActiveWorkout />} />
-                    <Route path="/history" element={<div className="p-8 text-center">History - Coming Soon!</div>} />
+                    <Route path="/history" element={<History />} />
+                    <Route path="/history/:sessionId" element={<WorkoutDetail />} />
                     <Route path="/progress" element={<div className="p-8 text-center">Progress - Coming Soon!</div>} />
                     <Route path="/profile" element={<div className="p-8 text-center">Profile - Coming Soon!</div>} />
                     <Route path="/" element={<Navigate to="/dashboard" replace />} />
