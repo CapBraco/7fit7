@@ -81,17 +81,17 @@ Follow these steps to run **7Fit7** locally.
 
 ---
 
-### **1. Clone the Repository**
+### 1. Clone the Repository**
 ```bash
 git clone https://github.com/CapBraco/7fit7.git
 cd 7fit7
 ```
-### **2. Start Docker services (optional)
+### 2. Start Docker services (optional)
 ```bash
 docker-compose up -d
 ```
 
-### **3. Backend Setup
+### 3. Backend Setup
 ```bash
 cd backend
 python -m venv venv
@@ -101,7 +101,7 @@ python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver
 ```
-### **4. Frontend Setup
+### 4. Frontend Setup
 ```bash
 
 cd src
