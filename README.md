@@ -66,10 +66,6 @@
     - **History.tsx** – Display user workout history and statistics.  
   - **services/** – API services for workouts, routines, and user data.  
 
-- **manage.py** – Django management commands (backend).  
-- **requirements.txt** – Python packages for backend. 
-
-
 ## ▶️ How to Run the Application
 
 ### **Prerequisites**
