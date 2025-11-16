@@ -66,25 +66,33 @@
     - **History.tsx** – Display user workout history and statistics.  
   - **services/** – API services for workouts, routines, and user data.  
 
-## ▶️ How to Run the Application
+## 🚀 How to Run the Application
+
+Follow these steps to run **7Fit7** locally.
+
+---
 
 ### **Prerequisites**
-- Python 3.11+  
-- Node.js 18+  
-- postgresql
-- Docker (optional for database and media)
+- Python 3.11+
+- Node.js 18+
+- PostgreSQL 15+ (or SQLite for development)
+- Redis 7+ (optional, for Celery)
+- Docker & Docker Compose (recommended)
 
-### **1. Clone the repo**
+---
+
+### **1. Clone the Repository**
 ```bash
 git clone https://github.com/CapBraco/7fit7.git
 cd 7fit7
-2. Start Docker services (optional)
-bash
-Copy code
+```
+### **2. Start Docker services (optional)
+```bash
 docker-compose up -d
-3. Backend Setup
-bash
-Copy code
+```
+
+### **3. Backend Setup
+```bash
 cd backend
 python -m venv venv
 venv\Scripts\activate       # Windows
@@ -92,13 +100,16 @@ pip install -r requirements.txt
 python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver
-4. Frontend Setup
-bash
-Copy code
+```
+### **4. Frontend Setup
+```bash
+
 cd src
 npm install
 npm run dev
-Access
+```
+Access:
+
 Frontend: http://localhost:5173
 
 API: http://localhost:8000/api
