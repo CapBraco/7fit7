@@ -40,63 +40,27 @@
 ## 📁 File & Folder Structure
 
 ### **Backend**
-backend/
-├─ config/ (Django configuration)
-│ ├─ asgi.py
-│ ├─ settings.py
-│ ├─ urls.py
-│ └─ wsgi.py
-├─ nutrition/ (planned extension for nutrition tracking)
-│ ├─ admin.py
-│ ├─ apps.py
-│ ├─ models.py
-│ ├─ views.py
-│ └─ migrations/
-├─ social/ (planned extension for social features)
-│ ├─ admin.py
-│ ├─ apps.py
-│ ├─ models.py
-│ ├─ views.py
-│ └─ migrations/
-├─ users/ (authentication and user profiles)
-│ ├─ admin.py
-│ ├─ apps.py
-│ ├─ models.py
-│ ├─ serializers.py
-│ ├─ urls.py
-│ └─ views.py
-├─ static/ (static assets such as CSS, images)
-├─ media/ (uploaded media files)
+- **config/** – Django project configuration (settings, URLs, WSGI/ASGI).  
+- **nutrition/** – Models and views for nutrition features (planned extension).  
+- **social/** – Models and views for social/community features (planned extension).  
+- **users/** – Handles authentication, user profiles, serializers, and API endpoints.  
+- **static/** – Static assets such as CSS, images, or JS files.  
+- **media/** – Uploaded media files.  
+- **manage.py** – Django management script for migrations, server, etc.  
+- **requirements.txt** – List of Python dependencies and frameworks.
 
 ### **Frontend**
-frontend/
-├─ public/ (public assets for Vite)
-├─ src/
-│ ├─ App.tsx (main React application)
-│ ├─ main.tsx (application entry point)
-│ ├─ components/
-│ │ ├─ Navbar.tsx (navigation bar)
-│ │ └─ ProtectedRoute.tsx (authentication guard)
-│ ├─ contexts/
-│ │ └─ AuthContext.tsx (JWT authentication context)
-│ ├─ pages/
-│ │ ├─ Login.tsx (login page)
-│ │ ├─ Register.tsx (registration page)
-│ │ ├─ Dashboard.tsx (main user dashboard)
-│ │ ├─ Workouts.tsx (view all workouts)
-│ │ ├─ CreateRoutine.tsx (create and customize routines, exercises, and sets)
-│ │ ├─ ActiveWorkout.tsx (track active training sessions)
-│ │ ├─ WorkoutDetail.tsx (view completed workout data)
-│ │ └─ History.tsx (historical workouts and statistics)
-│ └─ services/
-│ └─ workoutService.ts (handles API calls for exercises and routines)
-├─ manage.py (Django management commands)
-└─ requirements.txt (Python packages and frameworks)
+- **public/** – Public assets for the Vite React app (images, favicon, etc.).  
+- **src/** – Main source code folder containing all React logic:  
+  - **App.tsx & main.tsx** – Application entry points.  
+  - **components/** – Reusable UI components (Navbar, ProtectedRoute).  
+  - **contexts/** – Global state and JWT authentication (AuthContext).  
+  - **pages/** – Main app pages: Login, Register, Dashboard, Workouts, CreateRoutine, ActiveWorkout, WorkoutDetail, and History.  
+  - **services/** – API services for workouts, routines, and user data.  
 
-### **Other Files**
-- `docker-compose.yml` – Database container setup  
-- `LICENSE` – MIT license  
----
+- **manage.py** – Django management commands (backend).  
+- **requirements.txt** – Python packages for backend.  
+
 
 ## ▶️ How to Run the Application
 
