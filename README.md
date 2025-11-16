@@ -20,31 +20,21 @@
 - Mobile-responsive design using Tailwind CSS.  
 - Fully Dockerized backend with SQLite for rapid setup.  
 
-These aspects demonstrate advanced full-stack development and justify the project’s distinctiveness and complexity compared to other CS50W projects.
-
 ---
 
 ## 🎯 Current Functionality
 
-### **Week 1 – Foundations**
 ✅ User authentication (JWT)  
 ✅ User profiles  
-
-### **Week 2 – Workout Structure**
 ✅ Exercise library  
 ✅ Create workout routines  
 ✅ Customize sets per exercise (reps, weight, rest)  
-
-### **Week 3 – Training & Performance**
 ✅ Active workout tracking  
 ✅ Rest timer in workout view  
 ✅ Complete and save workouts  
 ✅ Workout history  
 ✅ Detailed workout breakdown  
 ✅ Basic stats tracking (volume, sets, reps)  
-
-These features form a complete MVP-level application for strength training tracking.
-
 ---
 
 ## 📁 File & Folder Structure
@@ -78,9 +68,6 @@ backend/
 ├─ static/ (static assets such as CSS, images)
 ├─ media/ (uploaded media files)
 
-markdown
-Copy code
-
 ### **Frontend**
 frontend/
 ├─ public/ (public assets for Vite)
@@ -106,15 +93,9 @@ frontend/
 ├─ manage.py (Django management commands)
 └─ requirements.txt (Python packages and frameworks)
 
-markdown
-Copy code
-
 ### **Other Files**
-- `.gitignore` – Ignored files for git  
 - `docker-compose.yml` – Database container setup  
 - `LICENSE` – MIT license  
-- `README.md` – Project documentation  
-
 ---
 
 ## ▶️ How to Run the Application
@@ -122,7 +103,7 @@ Copy code
 ### **Prerequisites**
 - Python 3.11+  
 - Node.js 18+  
-- SQLite (bundled with Django)  
+- postgresql
 - Docker (optional for database and media)
 
 ### **1. Clone the repo**
@@ -155,15 +136,3 @@ Frontend: http://localhost:5173
 API: http://localhost:8000/api
 
 Admin Panel: http://localhost:8000/admin
-
-📌 Additional Notes for Staff
-The project demonstrates multi-level relational models and nested API endpoints.
-
-Active workout sessions update the backend in real-time and include rest timers.
-
-Full mobile responsiveness is implemented.
-
-A demonstration video shows all current features listed above.
-
-🧾 License
-MIT License
