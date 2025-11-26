@@ -5,6 +5,11 @@
 7Fit7 is a full-stack, performance-focused web application designed to help users structure, track, and analyze their strength training and workout routines. Built using **Django** for the robust back-end API and **React with TypeScript** for the dynamic, mobile-responsive front-end, it serves as a sophisticated tool for serious lifters and fitness enthusiasts who require detailed, set-by-set logging of their exercise sessions.
 
 ---
+## 🎬 Project Demonstration
+
+Watch a full demonstration of 7Fit7's core features, including routine creation, active workout tracking, and history viewing, in the video below.
+
+**Screencast Link:** [[Link to your YouTube Video URL here]](https://www.youtube.com/watch?v=d1y-WOFjGXM&t=6s)
 
 ## 📌 Distinctiveness and Complexity: Why this Project is Sufficient
 
