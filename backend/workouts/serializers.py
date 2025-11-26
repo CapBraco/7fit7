@@ -11,28 +11,42 @@ from .models import (
 
 class ExerciseSerializer(serializers.ModelSerializer):
     """Serializer for Exercise model"""
-    
+
+    secondary_muscles = serializers.ListField(
+        child=serializers.ChoiceField(choices=Exercise.SECONDARY_MUSCLE_CHOICES),
+        required=False
+    )
+
     class Meta:
         model = Exercise
         fields = [
             'id', 'name', 'description', 'category', 'muscle_group',
-            'equipment', 'instructions', 'video_url', 'image',
+            'equipment', 'secondary_muscles', 'instructions', 'video_url', 'image',
             'is_custom', 'created_by', 'created_at'
         ]
         read_only_fields = ['created_by', 'created_at']
+
 
 
 class ExerciseSetSerializer(serializers.ModelSerializer):
     """Serializer for ExerciseSet model"""
     
     exercise_name = serializers.CharField(source='exercise.name', read_only=True)
+    exercise_muscle_group = serializers.CharField(source='exercise.muscle_group', read_only=True)
+    exercise_secondary_muscles = serializers.ListField(
+    source='exercise.secondary_muscles',
+    child=serializers.CharField(),
+    read_only=True,
+    required=False,
+    allow_empty=True
+    )
     volume = serializers.ReadOnlyField()
     
     class Meta:
         model = ExerciseSet
         fields = [
-            'id', 'exercise', 'exercise_name', 'set_number', 'set_type',
-            'reps', 'weight', 'rest_seconds', 'duration_seconds',
+            'id', 'exercise', 'exercise_name', 'exercise_muscle_group', 'exercise_secondary_muscles',
+            'set_number', 'set_type', 'reps', 'weight', 'rest_seconds', 'duration_seconds',
             'distance_meters', 'difficulty', 'notes', 'is_personal_record',
             'volume', 'created_at'
         ]
@@ -157,6 +171,7 @@ class WorkoutSessionListSerializer(serializers.ModelSerializer):
     
     routine_name = serializers.CharField(source='routine.name', read_only=True)
     exercise_count = serializers.SerializerMethodField()
+    exercise_sets = ExerciseSetSerializer(many=True, read_only=True)  # Add this!
     
     class Meta:
         model = WorkoutSession
@@ -164,7 +179,7 @@ class WorkoutSessionListSerializer(serializers.ModelSerializer):
             'id', 'routine', 'routine_name', 'name', 'notes',
             'start_time', 'end_time', 'duration_minutes',
             'total_volume', 'total_sets', 'exercise_count',
-            'is_completed', 'created_at'
+            'is_completed', 'exercise_sets', 'created_at'  # Add exercise_sets here!
         ]
         read_only_fields = ['duration_minutes', 'total_volume', 'total_sets', 'created_at']
     

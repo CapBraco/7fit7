@@ -14,6 +14,7 @@ class Command(BaseCommand):
                 'category': 'strength',
                 'muscle_group': 'chest',
                 'equipment': 'barbell',
+                'secondary_muscles': 'shoulders,arms',
                 'instructions': 'Lie on bench, lower bar to chest, press up',
             },
             {
@@ -22,6 +23,7 @@ class Command(BaseCommand):
                 'category': 'strength',
                 'muscle_group': 'chest',
                 'equipment': 'dumbbell',
+                'secondary_muscles': 'shoulders,arms',
             },
             {
                 'name': 'Push-ups',
@@ -29,6 +31,7 @@ class Command(BaseCommand):
                 'category': 'strength',
                 'muscle_group': 'chest',
                 'equipment': 'bodyweight',
+                'secondary_muscles': 'shoulders,arms,core',
             },
             {
                 'name': 'Incline Dumbbell Press',
@@ -36,6 +39,7 @@ class Command(BaseCommand):
                 'category': 'strength',
                 'muscle_group': 'chest',
                 'equipment': 'dumbbell',
+                'secondary_muscles': 'shoulders,arms',
             },
             
             # Back

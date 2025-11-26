@@ -42,9 +42,13 @@ export const ActiveWorkout = () => {
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [sets, setSets] = useState<SetLog[]>([]);
   const [loading, setLoading] = useState(true);
-  const [workoutDuration, setWorkoutDuration] = useState(0);
   
-  // Timer state
+  // Session timer state
+  const [sessionTime, setSessionTime] = useState(0);
+  const [sessionStarted, setSessionStarted] = useState(false);
+  const [countdown, setCountdown] = useState(3);
+  
+  // Rest timer state
   const [isResting, setIsResting] = useState(false);
   const [restTimeLeft, setRestTimeLeft] = useState(0);
   const [restDuration, setRestDuration] = useState(60);
@@ -53,19 +57,30 @@ export const ActiveWorkout = () => {
     initWorkout();
   }, [routineId]);
 
-  // Workout duration timer
+  // Countdown timer before starting
   useEffect(() => {
-    if (session) {
-      const interval = setInterval(() => {
-        const startTime = new Date(session.start_time).getTime();
-        const now = new Date().getTime();
-        const durationInSeconds = Math.floor((now - startTime) / 1000);
-        setWorkoutDuration(durationInSeconds);
+    if (countdown > 0 && countdown <= 3) {
+      const timer = setTimeout(() => {
+        setCountdown(countdown - 1);
       }, 1000);
-      return () => clearInterval(interval);
+      return () => clearTimeout(timer);
+    } else if (countdown === 0 && !sessionStarted) {
+      setSessionStarted(true);
     }
-  }, [session]);
+  }, [countdown, sessionStarted]);
 
+  // Session timer (overall workout time)
+  useEffect(() => {
+    let interval: any;
+    if (sessionStarted) {
+      interval = setInterval(() => {
+        setSessionTime((prev) => prev + 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [sessionStarted]);
+
+  // Rest timer (between sets)
   useEffect(() => {
     let interval: any;
     if (isResting && restTimeLeft > 0) {
@@ -74,7 +89,6 @@ export const ActiveWorkout = () => {
       }, 1000);
     } else if (restTimeLeft === 0 && isResting) {
       setIsResting(false);
-      // Play sound or notification here
     }
     return () => clearInterval(interval);
   }, [isResting, restTimeLeft]);
@@ -121,12 +135,23 @@ export const ActiveWorkout = () => {
 
   const updateSet = (index: number, field: 'reps' | 'weight', value: number) => {
     const updated = [...sets];
-    updated[index] = { ...updated[index], [field]: value };
+    const parsedValue = field === 'weight' ? parseFloat(value.toString()) || 0 : parseInt(value.toString()) || 0;
+    updated[index] = { ...updated[index], [field]: parsedValue };
     setSets(updated);
   };
 
   const completeSet = async (index: number) => {
     const set = sets[index];
+    
+    // Validate set data
+    if (!set.reps || set.reps < 1) {
+      alert('Please enter valid reps (at least 1)');
+      return;
+    }
+    
+    if (set.weight === null || set.weight === undefined) {
+      set.weight = 0; // Allow 0 for bodyweight exercises
+    }
     
     try {
       // Save set to backend
@@ -149,7 +174,7 @@ export const ActiveWorkout = () => {
       }
     } catch (error) {
       console.error('Failed to save set:', error);
-      alert('Failed to save set');
+      alert('Failed to save set. Please try again.');
     }
   };
 
@@ -216,6 +241,18 @@ export const ActiveWorkout = () => {
     );
   }
 
+  // Countdown screen
+  if (countdown > 0) {
+    return (
+      <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-6xl font-bold mb-4">Get Ready!</h1>
+          <div className="text-9xl font-bold animate-pulse">{countdown}</div>
+        </div>
+      </div>
+    );
+  }
+
   const currentExercise = exercises[currentExerciseIndex];
   const allSetsCompleted = sets.every((s) => s.completed);
 
@@ -227,9 +264,14 @@ export const ActiveWorkout = () => {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold">{routine?.name}</h1>
-              <p className="text-gray-400 text-sm">
-                Exercise {currentExerciseIndex + 1} of {exercises.length}
-              </p>
+              <div className="flex items-center space-x-4 text-sm text-gray-400">
+                <span>Exercise {currentExerciseIndex + 1} of {exercises.length}</span>
+                <span>•</span>
+                <span className="flex items-center space-x-1">
+                  <Timer className="w-4 h-4" />
+                  <span>{formatTime(sessionTime)}</span>
+                </span>
+              </div>
             </div>
             <button
               onClick={finishWorkout}

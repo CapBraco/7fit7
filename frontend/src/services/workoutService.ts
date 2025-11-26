@@ -20,8 +20,17 @@ export const getExercise = async (id: number) => {
 };
 
 export const createExercise = async (data: any) => {
-  const response = await axios.post(`${API_URL}/workouts/exercises/`, data);
-  return response.data;
+  console.log('workoutService - createExercise called with:', data);
+  console.log('workoutService - axios headers:', axios.defaults.headers.common);
+  
+  try {
+    const response = await axios.post(`${API_URL}/workouts/exercises/`, data);
+    console.log('workoutService - createExercise success:', response.data);
+    return response.data;
+  } catch (error: any) {
+    console.error('workoutService - createExercise error:', error.response?.data);
+    throw error;
+  }
 };
 
 // ============= WORKOUT ROUTINES =============
