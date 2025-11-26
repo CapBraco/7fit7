@@ -51,9 +51,19 @@ export const CreateRoutine = () => {
     name: '',
     category: 'strength',
     muscle_group: 'chest',
+    secondary_muscles: [],
     equipment: 'bodyweight',
     description: '',
   });
+  const [showSecondaryMusclesPicker, setShowSecondaryMusclesPicker] = useState(false);
+  const [secondaryMusclesSearch, setSecondaryMusclesSearch] = useState('');
+
+  // Available muscle groups for secondary muscles
+  const muscleGroups = [
+    'chest', 'back', 'shoulders', 'arms', 'legs', 'core', 'full_body', 
+    'triceps', 'biceps', 'forearms', 'glutes', 'hamstrings', 'quadriceps', 
+    'calves', 'abs', 'obliques', 'traps', 'lats', 'delts', 'cardio'
+  ];
 
   useEffect(() => {
     loadExercises();
@@ -251,6 +261,23 @@ export const CreateRoutine = () => {
     setDraggedSet(null);
   };
 
+  const addSecondaryMuscle = (muscle: string) => {
+    if (!newExercise.secondary_muscles.includes(muscle)) {
+      setNewExercise({
+        ...newExercise,
+        secondary_muscles: [...newExercise.secondary_muscles, muscle]
+      });
+    }
+    setSecondaryMusclesSearch('');
+  };
+
+  const removeSecondaryMuscle = (muscle: string) => {
+    setNewExercise({
+      ...newExercise,
+      secondary_muscles: newExercise.secondary_muscles.filter(m => m !== muscle)
+    });
+  };
+
   const handleCreateExercise = async () => {
     if (!newExercise.name.trim()) {
       alert('Please enter an exercise name');
@@ -258,6 +285,7 @@ export const CreateRoutine = () => {
     }
 
     try {
+      console.log('Creating exercise with data:', newExercise);
       const createdExercise = await createExercise(newExercise);
       // Add to exercises list
       setExercises([...exercises, createdExercise]);
@@ -268,6 +296,7 @@ export const CreateRoutine = () => {
         name: '',
         category: 'strength',
         muscle_group: 'chest',
+        secondary_muscles: [],
         equipment: 'bodyweight',
         description: '',
       });
@@ -306,6 +335,11 @@ export const CreateRoutine = () => {
 
   const filteredExercises = exercises.filter((ex) =>
     ex.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const filteredMuscleGroups = muscleGroups.filter(muscle => 
+    muscle.toLowerCase().includes(secondaryMusclesSearch.toLowerCase()) &&
+    !newExercise.secondary_muscles.includes(muscle)
   );
 
   return (
@@ -780,6 +814,85 @@ export const CreateRoutine = () => {
                   <option value="full_body">Full Body</option>
                   <option value="cardio">Cardio</option>
                 </select>
+              </div>
+
+              {/* Secondary Muscles */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Secondary Muscles
+                </label>
+                
+                {/* Search input */}
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <input
+                    type="text"
+                    value={secondaryMusclesSearch}
+                    onChange={(e) => setSecondaryMusclesSearch(e.target.value)}
+                    onFocus={() => setShowSecondaryMusclesPicker(true)}
+                    className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                    placeholder="Search muscle groups..."
+                  />
+                  {secondaryMusclesSearch && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSecondaryMusclesSearch('');
+                        setShowSecondaryMusclesPicker(false);
+                      }}
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+
+                {/* Dropdown with filtered options */}
+                {showSecondaryMusclesPicker && secondaryMusclesSearch && (
+                  <div className="mt-2 max-h-48 overflow-y-auto border border-gray-200 rounded-lg bg-white shadow-lg">
+                    {filteredMuscleGroups.length > 0 ? (
+                      filteredMuscleGroups.map((muscle) => (
+                        <button
+                          key={muscle}
+                          type="button"
+                          onClick={() => addSecondaryMuscle(muscle)}
+                          className="w-full text-left px-3 py-2 hover:bg-blue-50 transition text-sm capitalize"
+                        >
+                          {muscle.replace('_', ' ')}
+                        </button>
+                      ))
+                    ) : (
+                      <div className="px-3 py-2 text-sm text-gray-500">
+                        No matching muscle groups
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Selected muscles as chips */}
+                {newExercise.secondary_muscles.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {newExercise.secondary_muscles.map((muscle) => (
+                      <span
+                        key={muscle}
+                        className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-700"
+                      >
+                        <span className="capitalize">{muscle.replace('_', ' ')}</span>
+                        <button
+                          type="button"
+                          onClick={() => removeSecondaryMuscle(muscle)}
+                          className="ml-2 text-blue-700 hover:text-blue-900"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                )}
+                
+                <p className="text-xs text-gray-500 mt-1">
+                  Search and click to add muscle groups
+                </p>
               </div>
 
               {/* Equipment */}

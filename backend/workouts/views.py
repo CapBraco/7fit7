@@ -254,6 +254,8 @@ def complete_session(request, pk):
     session = get_object_or_404(WorkoutSession, pk=pk, user=request.user)
     
     from django.utils import timezone
+    from django.db.models import Avg
+    
     session.end_time = timezone.now()
     session.is_completed = True
     session.calculate_duration()
@@ -269,6 +271,18 @@ def complete_session(request, pk):
     # Update routine stats
     if session.routine:
         session.routine.total_uses += 1
+        
+        # Calculate average duration from all completed sessions of this routine
+        completed_sessions = WorkoutSession.objects.filter(
+            routine=session.routine,
+            is_completed=True,
+            duration_minutes__isnull=False
+        )
+        avg_duration = completed_sessions.aggregate(Avg('duration_minutes'))['duration_minutes__avg']
+        
+        if avg_duration:
+            session.routine.average_duration = round(avg_duration)
+        
         session.routine.save()
     
     serializer = WorkoutSessionDetailSerializer(session)
@@ -304,7 +318,6 @@ class ExerciseSetListCreateView(generics.ListCreateAPIView):
             user=self.request.user
         )
         serializer.save(session=session)
-    
 
 
 class ExerciseSetDetailView(generics.RetrieveUpdateDestroyAPIView):

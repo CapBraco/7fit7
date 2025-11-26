@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
+from workouts.models import BodyWeightLog
 from django.contrib.auth import get_user_model
 from .serializers import (
     UserRegistrationSerializer,
@@ -212,3 +213,28 @@ def check_auth(request):
         'authenticated': True,
         'user': UserProfileSerializer(request.user).data
     })
+
+@api_view(['GET', 'POST'])
+@permission_classes([permissions.IsAuthenticated])
+def body_weight_log(request):
+    if request.method == 'GET':
+        logs = BodyWeightLog.objects.filter(user=request.user).order_by('-date')
+        data = [{'id': log.id, 'weight': log.weight, 'date': log.date, 'notes': log.notes} for log in logs]
+        return Response(data)
+    
+    elif request.method == 'POST':
+        date = request.data.get('date')
+        weight = request.data.get('weight')
+        
+        log, created = BodyWeightLog.objects.update_or_create(
+            user=request.user,
+            date=date,
+            defaults={'weight': weight, 'notes': request.data.get('notes', '')}
+        )
+        
+        return Response({
+            'id': log.id,
+            'weight': log.weight,
+            'date': log.date,
+            'notes': log.notes
+        }, status=status.HTTP_201_CREATED if created else status.HTTP_200_OK)

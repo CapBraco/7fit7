@@ -10,6 +10,7 @@ from .views import (
     UserGoalListCreateView,
     UserGoalDetailView,
     check_auth,
+    body_weight_log,
 )
 
 urlpatterns = [
@@ -24,6 +25,7 @@ urlpatterns = [
     path('profile/', UserProfileView.as_view(), name='user_profile'),
     path('profile/update/', UserUpdateView.as_view(), name='user_update'),
     path('change-password/', ChangePasswordView.as_view(), name='change_password'),
+    path('body-weight/', body_weight_log, name='body_weight_log'),
     
     # User Goals
     path('goals/', UserGoalListCreateView.as_view(), name='user_goals'),

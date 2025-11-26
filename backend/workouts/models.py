@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.contrib.postgres.fields import ArrayField
 
 User = get_user_model()
 
@@ -25,6 +26,16 @@ class Exercise(models.Model):
         ('full_body', 'Full Body'),
         ('cardio', 'Cardio'),
     ]
+    SECONDARY_MUSCLE_CHOICES = [
+    ('shoulders', 'Shoulders'),
+    ("triceps", "Triceps"),
+    ('biceps', 'Biceps'),
+    ("back", "Back"),
+    ('forearms', 'Forearms'),
+    ('calves', 'Calves'),
+    ('neck', 'Neck'),
+    ('chest', 'Chest'),
+    ]
     
     EQUIPMENT_CHOICES = [
         ('barbell', 'Barbell'),
@@ -42,6 +53,11 @@ class Exercise(models.Model):
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
     muscle_group = models.CharField(max_length=20, choices=MUSCLE_GROUP_CHOICES)
     equipment = models.CharField(max_length=20, choices=EQUIPMENT_CHOICES)
+    secondary_muscles = ArrayField(
+    models.CharField(max_length=20, choices=SECONDARY_MUSCLE_CHOICES),
+    default=list,
+    blank=True
+)
     
     # Optional fields
     instructions = models.TextField(blank=True, help_text="How to perform the exercise")
@@ -282,3 +298,24 @@ class WorkoutLike(models.Model):
     
     def __str__(self):
         return f"{self.user.username} likes {self.routine.name}"
+
+
+class BodyWeightLog(models.Model):
+    """Track user's body weight over time"""
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='weight_logs')
+    weight = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        help_text="Weight in kg"
+    )
+    date = models.DateField()
+    notes = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-date']
+        unique_together = ['user', 'date']
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.weight}kg on {self.date}"
