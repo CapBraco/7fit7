@@ -11,6 +11,7 @@ Watch a full demonstration of 7Fit7's core features, including routine creation,
 
 **Screencast Link:** https://www.youtube.com/watch?v=d1y-WOFjGXM&t=6s
 
+
 ## 📌 Distinctiveness and Complexity: Why this Project is Sufficient
 
 ### Distinctiveness from CS50W Projects
@@ -37,9 +38,12 @@ The `ActiveWorkout.tsx` page is the most complex front-end component. It require
 * Implementing and running a **Rest Timer** that automatically pauses the workout flow and updates the UI every second.
 * Handling user input for reps and weight for a set, saving it instantly, and automatically transitioning the user to the next set/exercise upon completion.
 * Using a state management library (like **React Query**) to handle asynchronous API updates and data fetching, ensuring the local state and the Django back-end database remain synchronized throughout the session.
+<img width="2879" height="1628" alt="image" src="https://github.com/user-attachments/assets/64f29ab3-ed22-4b13-a6c3-1d356c5a49dd" />
+
 
 **3. Mobile-Responsiveness and Design:**
 The application must be fully functional and aesthetically pleasing on both desktop and mobile devices. This was achieved using **Tailwind CSS** for a utility-first approach to styling, implementing complex flexbox and grid layouts to ensure the `ActiveWorkout` interface remains usable and clear on small screens, which is crucial for an application used *during* physical activity.
+<img width="2874" height="1622" alt="image" src="https://github.com/user-attachments/assets/9cd54892-db96-42ff-92db-3a13fb45a02f" />
 
 ---
 
