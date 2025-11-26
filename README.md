@@ -9,7 +9,7 @@
 
 Watch a full demonstration of 7Fit7's core features, including routine creation, active workout tracking, and history viewing, in the video below.
 
-**Screencast Link:** [(https://www.youtube.com/watch?v=d1y-WOFjGXM&t=6s)]
+**Screencast Link:** https://www.youtube.com/watch?v=d1y-WOFjGXM&t=6s
 
 ## 📌 Distinctiveness and Complexity: Why this Project is Sufficient
 
