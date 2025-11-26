@@ -106,6 +106,8 @@ python manage.py runserver
 ### 4. Frontend Setup
 ```Bash
 
+4. **Frontend Setup**
+```bash
 cd frontend
 npm install
 # Start the React development server
