@@ -71,7 +71,7 @@ Follow these steps to run **7Fit7** locally.
 
 ### 1. Clone the Repository and Navigate
 ```bash
-git clone [https://github.com/CapBraco/7fit7.git](https://github.com/CapBraco/7fit7.git)
+git clone https://github.com/me50/CapBraco.git
 cd 7fit7
 ```
 ### 2. Start Docker Services (Recommended)
