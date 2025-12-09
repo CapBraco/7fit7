@@ -80,7 +80,7 @@ The `ActiveWorkout.tsx` page is the most complex front-end component. It require
 * Implementing and running a **Rest Timer** that automatically pauses the workout flow and updates the UI every second.
 * Handling user input for reps and weight for a set, saving it instantly, and automatically transitioning the user to the next set/exercise upon completion.
 * Using a state management library (like **React Query**) to handle asynchronous API updates and data fetching, ensuring the local state and the Django back-end database remain synchronized throughout the session.
-* 
+  
 <img width="2879" height="1628" alt="image" src="https://github.com/user-attachments/assets/64f29ab3-ed22-4b13-a6c3-1d356c5a49dd" />
 
 
