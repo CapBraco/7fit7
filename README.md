@@ -146,10 +146,15 @@ python manage.py runserver
 ```Bash
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 4. **Frontend Setup**
 ```bash
 >>>>>>> 5c3728fc11e5a201d1acce3d5d7b17849b9f33fc
+=======
+4. **Frontend Setup**
+```bash
+>>>>>>> 0d44296a8499fe69b446998cc4ebe6560006d14a
 cd frontend
 npm install
 # Start the React development server
