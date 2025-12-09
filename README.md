@@ -44,6 +44,7 @@ The `ActiveWorkout.tsx` page is the most complex front-end component. It require
 
 **3. Mobile-Responsiveness and Design:**
 The application must be fully functional and aesthetically pleasing on both desktop and mobile devices. This was achieved using **Tailwind CSS** for a utility-first approach to styling, implementing complex flexbox and grid layouts to ensure the `ActiveWorkout` interface remains usable and clear on small screens, which is crucial for an application used *during* physical activity.
+<<<<<<< HEAD
 
 <img width="2874" height="1622" alt="image" src="https://github.com/user-attachments/assets/9cd54892-db96-42ff-92db-3a13fb45a02f" />
 
@@ -80,6 +81,44 @@ Follow these steps to run **7Fit7** locally.
 - Node.js 18+
 - Docker & Docker Compose (recommended for a simple setup)
 
+=======
+
+<img width="2874" height="1622" alt="image" src="https://github.com/user-attachments/assets/9cd54892-db96-42ff-92db-3a13fb45a02f" />
+
+---
+
+## 💻 File Documentation: My Code Contributions
+
+The following outlines the purpose and contents of the primary files I created or significantly modified for this project, highlighting the areas of core logic and functionality.
+
+| File Path | Purpose and Contents |
+| :--- | :--- |
+| **users/models.py** | Defines the custom `User` model, extending Django's built-in `AbstractUser` to include performance-related fields, necessary for managing user profiles and authentication tokens. |
+| **users/views.py** | Contains the API view logic for user management, including the `UserViewSet` for profile retrieval, update, and the custom view for JWT token creation and refresh. Implements Django REST Framework's **ViewSets and permissions**. |
+| **workouts/models.py** | This is the **most complex model file**, defining the core relational schema: `Exercise`, `Routine`, `RoutineExercise`, `RoutineSet`, `Session`, `SessionExercise`, and `SessionSet`. This includes all the foreign key relationships and custom methods for data integrity. **This file utilizes the at least one model requirement.** |
+| **workouts/serializers.py** | Implements the **nested DRF serializers** required to handle the complex relationships defined in `models.py`. For example, the `RoutineSerializer` nests `RoutineExerciseSerializer` and `RoutineSetSerializer` to allow a user to create a complete routine structure in a single POST request. |
+| **workouts/views.py** | Houses the core application logic via DRF ViewSets for `Exercise`, `Routine`, `Session`, and statistical endpoints. This includes custom filtering for user-specific data and dedicated actions for starting and completing a workout session, updating **SessionSets** as the user logs them. |
+| **config/settings.py** | Configuration for Django, including environment variables, database setup (configured for SQLite and Docker for development), CORS configuration to allow the React front-end to connect, and **JWT settings** (using `djangorestframework-simplejwt`). |
+| **requirements.txt** | Lists all required Python packages: `django`, `djangorestframework`, `Pillow`, `gunicorn`, `djangorestframework-simplejwt`, among others. |
+| **src/pages/ActiveWorkout.tsx** | The **most complex front-end component**. This page manages the entire live workout session. It contains the logic for **timer control** (handling rest and work time), state transitions between sets/exercises, and the forms for logging reps and weight. It uses React Query to communicate set completions to the Django API in real-time. |
+| **src/pages/CreateRoutine.tsx** | Contains the dynamic form logic for building a multi-exercise routine. It manages the array state of exercises and their corresponding sets, allowing users to add, remove, and edit sets before submitting the entire nested routine object to the backend via a single API call. |
+| **src/contexts/AuthContext.tsx** | A custom React Context that handles **JSON Web Token (JWT)** authentication, managing the user's logged-in state, storing and refreshing access tokens, and providing methods for secure login/logout. This is used by the `ProtectedRoute` component to gate access to the app's internal pages. |
+| **src/components/WorkoutTimer.tsx** | A reusable component specifically built for the `ActiveWorkout` page. It handles the minute/second display and the countdown logic for the rest timer, receiving the rest duration and triggering a callback when the time is up. |
+| **src/services/apiService.ts** | Configures the **Axios** HTTP client with the base URL and an interceptor to **automatically attach the user's JWT access token** to all outgoing requests, ensuring that the backend can authenticate every API interaction. |
+| **src/pages/Dashboard.tsx** | Fetches and displays aggregated user performance statistics (total volume, total sets, exercise PRs) by making asynchronous calls to the Django statistics endpoints, presenting the data in a user-friendly format. |
+
+---
+
+## 🚀 How to Run the Application
+
+Follow these steps to run **7Fit7** locally.
+
+### **Prerequisites**
+- Python 3.11+
+- Node.js 18+
+- Docker & Docker Compose (recommended for a simple setup)
+
+>>>>>>> 5c3728fc11e5a201d1acce3d5d7b17849b9f33fc
 ### 1. Clone the Repository and Navigate
 ```bash
 git clone https://github.com/me50/CapBraco.git
@@ -106,6 +145,11 @@ python manage.py runserver
 ### 4. Frontend Setup
 ```Bash
 
+<<<<<<< HEAD
+=======
+4. **Frontend Setup**
+```bash
+>>>>>>> 5c3728fc11e5a201d1acce3d5d7b17849b9f33fc
 cd frontend
 npm install
 # Start the React development server
