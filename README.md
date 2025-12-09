@@ -1224,8 +1224,7 @@ Docker Compose orchestrates both the backend and frontend in isolated containers
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/me50/CapBraco.git
-   cd 7fit7
+   git clone https://github.com/CapBraco/7fit7.git
    ```
 
 2. **Start Docker Services:**
@@ -1453,4 +1452,4 @@ This project is licensed under the MIT License. See LICENSE file for details.
 
 ---
 
-**Built with 💪 by [Your Name] as part of CS50's Web Programming with Python and JavaScript**
+**Built with 💪 by Bryan A. Paucar as part of CS50's Web Programming with Python and JavaScript**
