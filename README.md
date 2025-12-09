@@ -28,12 +28,10 @@
   
 # 🏋️‍♂️ 7Fit7: A Performance-Focused Workout Tracking Platform
 
-## Overview
-
 **7Fit7** is a **full-stack, performance-focused** web application designed to help users structure, track, and analyze their strength training and workout routines. Built using **Django** for a robust **back-end API** and **React with TypeScript** for a dynamic, mobile-responsive front-end, it serves as a sophisticated tool for serious lifters and fitness enthusiasts who require detailed, **set-by-set logging** and **long-term performance analysis**.
 
 ***
-
+## Overview
 **7Fit7** is a dedicated **gym tracker application** focused on **detailed, granular performance logging**. Its core utility is delivered through sophisticated features for the personalization and creation of both *routines* and individual *sets*. The application supports both **guest and registered users**. Guest users can access and utilize public routines and benefit from the real-time *Workout Companion*, which provides guided tracking. Registered users, however, unlock the full potential, starting with the ability to create and customize their own training routines.
 
 A key distinct feature is the **Exercise Contribution System**. If a desired exercise is not in the database, a registered user can create a new one, detailing its function, categorizing it by muscle group, and choosing to make it public or private. By publishing exercises publicly, the creator gains **community credit**: they can track how many other users have used their exercise and how many have included it in a routine, building credibility and reputation. While this introduces a sharing aspect, it is centered entirely around **data and utility** (exercise content) rather than a global feed or personal interactions, clearly differentiating it from a traditional social network.
