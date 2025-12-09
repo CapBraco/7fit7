@@ -25,6 +25,7 @@
 
   <img src="https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge" alt="License: MIT">
   </p>
+  
 # 🏋️‍♂️ 7Fit7: A Performance-Focused Workout Tracking Platform
 
 ## Overview
