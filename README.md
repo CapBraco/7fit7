@@ -63,7 +63,7 @@ Watch a full demonstration of 7Fit7's core features, including routine creation,
     * While it has a component for users to **publish exercises** and track their utility (a data-focused sharing system), this feature acts solely to enhance the core utility (the exercise library) and build creator reputation based on **utility**, not personal interaction.
     * The user experience is primarily **private and individual**, centered on managing their own routines, history, and statistics.
       
-### Architectural and Functional Complexity
+## Architectural and Functional Complexity
 
 The complexity of 7Fit7 stems from its nested data models, dynamic state management during an active session, and the calculation of performance statistics from raw log data.
 
