@@ -51,14 +51,18 @@ Watch a full demonstration of 7Fit7's core features, including routine creation,
 
 ### Distinctiveness from CS50W Projects
 
-Distinctiveness from CS50W Projects
+7Fit7 is **architecturally and functionally distinct** from the course's foundational projects, primarily because its complexity is rooted in **nested, time-series performance data management**, rather than transactional or social dynamics.
 
-7Fit7 is architecturally and functionally distinct from the course's foundational projects, primarily because its complexity is rooted in nested, time-series performance data management, rather than transactional or social dynamics.
+* **Not an E-commerce Site (Project 2):** The application is unequivocally **not an e-commerce platform**.
+    * It involves **no transactional data, listings, bidding, or selling products**.
+    * The core user actions—creating routines, initiating a live session, logging set-by-set data, and analyzing statistics—are entirely focused on **data logging and performance analysis**.
+    * The primary complexity is managing **session state and nested data structures across time**, which is fundamentally different from the CRUD operations central to a marketplace.
 
-Not an E-commerce Site (Project 2): The application is unequivocally not an e-commerce platform. It involves no transactional data, listings, bidding, or selling products. The core user actions—creating routines, initiating a live session, logging set-by-set data, and analyzing statistics—are entirely focused on data logging and performance analysis. The primary complexity is managing session state and nested data structures across time, which is fundamentally different from the CRUD operations central to a marketplace.
-
-Not a Social Network (Project 4): 7Fit7 is explicitly not a traditional social network. It lacks core Project 4 functionality such as a global timeline, 'following,' or personal post feeds. While it has a component for users to publish exercises and track their utility (a data-focused sharing system), this feature acts solely to enhance the core utility (the exercise library) and build creator reputation based on utility, not personal interaction. The user experience is primarily private and individual, centered on managing their own routines, history, and statistics.
-
+* **Not a Social Network (Project 4):** 7Fit7 is explicitly **not a traditional social network**.
+    * It lacks core Project 4 functionality such as a **global timeline, 'following,' or personal post feeds**.
+    * While it has a component for users to **publish exercises** and track their utility (a data-focused sharing system), this feature acts solely to enhance the core utility (the exercise library) and build creator reputation based on **utility**, not personal interaction.
+    * The user experience is primarily **private and individual**, centered on managing their own routines, history, and statistics.
+      
 ### Architectural and Functional Complexity
 
 The complexity of 7Fit7 stems from its nested data models, dynamic state management during an active session, and the calculation of performance statistics from raw log data.
