@@ -41,7 +41,12 @@ export const getRoutines = async (params?: {
   search?: string;
 }) => {
   const response = await axios.get(`${API_URL}/workouts/routines/`, { params });
-  return response.data;
+  // ✅ FIX: Extract results array from paginated response
+  if (response.data && response.data.results) {
+    return response.data.results;
+  }
+  // Fallback for non-paginated responses
+  return Array.isArray(response.data) ? response.data : [];
 };
 
 export const getRoutine = async (id: number) => {
