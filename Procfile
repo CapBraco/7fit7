@@ -1,2 +1,2 @@
-web: cd backend && gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 4
-release: cd backend && python manage.py migrate --noinput && python manage.py collectstatic --noinput && python manage.py seed_exercises --noinput
+release: cd backend && python manage.py migrate --noinput
+web: cd backend && gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --timeout 120
