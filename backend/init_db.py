@@ -25,7 +25,7 @@ print("=" * 80)
 
 print("\nSeeding exercises...")
 try:
-    call_command('seed_exercises', '--noinput')
+    call_command('seed_exercises')
     print("Exercises seeded successfully!")
 except Exception as e:
     print(f"Could not seed exercises: {e}")
