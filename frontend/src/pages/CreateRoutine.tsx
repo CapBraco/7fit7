@@ -3,6 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { Trash2, Search, X, ChevronDown, ChevronUp, Copy, GripVertical, Plus } from 'lucide-react';
 import { getExercises, createRoutine, createExercise } from '../services/workoutService';
 
+type PaginatedResponse<T> = {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: T[];
+};
 interface Exercise {
   id: number;
   name: string;
@@ -70,13 +76,14 @@ export const CreateRoutine = () => {
   }, []);
 
   const loadExercises = async () => {
-    try {
-      const data = await getExercises();
-      setExercises(data);
-    } catch (error) {
-      console.error('Failed to load exercises:', error);
-    }
-  };
+  try {
+    const data: PaginatedResponse<Exercise> = await getExercises();
+    setExercises(data.results ?? []);
+  } catch (error) {
+    console.error('Failed to load exercises:', error);
+    setExercises([]);
+  }
+};
 
   const addExercise = (exercise: Exercise) => {
     const newExercise: RoutineExercise = {
@@ -341,9 +348,11 @@ export const CreateRoutine = () => {
     }
   };
 
-  const filteredExercises = exercises.filter((ex) =>
-    ex.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredExercises = Array.isArray(exercises)
+  ? exercises.filter((ex) =>
+      ex.name?.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  : [];
 
   const filteredMuscleGroups = muscleGroups.filter(muscle => 
     muscle.toLowerCase().includes(secondaryMusclesSearch.toLowerCase()) &&
