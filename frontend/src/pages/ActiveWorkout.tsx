@@ -124,7 +124,7 @@ export const ActiveWorkout = () => {
         exercise: exercise.exercise,
         set_number: i + 1,
         reps: exercise.default_reps,
-        weight: exercise.default_weight,
+        weight: parseFloat(exercise.default_weight.toString()) || 0,
         completed: false,
       });
     }
