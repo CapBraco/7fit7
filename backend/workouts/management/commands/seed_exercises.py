@@ -14,7 +14,7 @@ class Command(BaseCommand):
                 'category': 'strength',
                 'muscle_group': 'chest',
                 'equipment': 'barbell',
-                'secondary_muscles': 'shoulders,arms',
+                'secondary_muscles': ['shoulders', 'triceps'],  # ✅ Changed to list
                 'instructions': 'Lie on bench, lower bar to chest, press up',
             },
             {
@@ -23,7 +23,7 @@ class Command(BaseCommand):
                 'category': 'strength',
                 'muscle_group': 'chest',
                 'equipment': 'dumbbell',
-                'secondary_muscles': 'shoulders,arms',
+                'secondary_muscles': ['shoulders', 'triceps'],  # ✅ Changed to list
             },
             {
                 'name': 'Push-ups',
@@ -31,7 +31,7 @@ class Command(BaseCommand):
                 'category': 'strength',
                 'muscle_group': 'chest',
                 'equipment': 'bodyweight',
-                'secondary_muscles': 'shoulders,arms,core',
+                'secondary_muscles': ['shoulders', 'triceps'],  # ✅ Changed to list
             },
             {
                 'name': 'Incline Dumbbell Press',
@@ -39,7 +39,7 @@ class Command(BaseCommand):
                 'category': 'strength',
                 'muscle_group': 'chest',
                 'equipment': 'dumbbell',
-                'secondary_muscles': 'shoulders,arms',
+                'secondary_muscles': ['shoulders', 'triceps'],  # ✅ Changed to list
             },
             
             # Back
@@ -49,6 +49,7 @@ class Command(BaseCommand):
                 'category': 'strength',
                 'muscle_group': 'back',
                 'equipment': 'barbell',
+                'secondary_muscles': [],  # ✅ Empty list is fine
             },
             {
                 'name': 'Pull-ups',
@@ -56,6 +57,7 @@ class Command(BaseCommand):
                 'category': 'strength',
                 'muscle_group': 'back',
                 'equipment': 'bodyweight',
+                'secondary_muscles': ['biceps'],  # ✅ Changed to list
             },
             {
                 'name': 'Barbell Row',
@@ -63,6 +65,7 @@ class Command(BaseCommand):
                 'category': 'strength',
                 'muscle_group': 'back',
                 'equipment': 'barbell',
+                'secondary_muscles': ['biceps'],  # ✅ Changed to list
             },
             {
                 'name': 'Lat Pulldown',
@@ -70,6 +73,7 @@ class Command(BaseCommand):
                 'category': 'strength',
                 'muscle_group': 'back',
                 'equipment': 'machine',
+                'secondary_muscles': ['biceps'],  # ✅ Changed to list
             },
             
             # Legs
@@ -79,6 +83,7 @@ class Command(BaseCommand):
                 'category': 'strength',
                 'muscle_group': 'legs',
                 'equipment': 'barbell',
+                'secondary_muscles': [],  # ✅ Empty list
             },
             {
                 'name': 'Leg Press',
@@ -86,6 +91,7 @@ class Command(BaseCommand):
                 'category': 'strength',
                 'muscle_group': 'legs',
                 'equipment': 'machine',
+                'secondary_muscles': [],  # ✅ Empty list
             },
             {
                 'name': 'Romanian Deadlift',
@@ -93,6 +99,7 @@ class Command(BaseCommand):
                 'category': 'strength',
                 'muscle_group': 'legs',
                 'equipment': 'barbell',
+                'secondary_muscles': ['back'],  # ✅ Changed to list
             },
             {
                 'name': 'Lunges',
@@ -100,6 +107,7 @@ class Command(BaseCommand):
                 'category': 'strength',
                 'muscle_group': 'legs',
                 'equipment': 'dumbbell',
+                'secondary_muscles': [],  # ✅ Empty list
             },
             {
                 'name': 'Leg Curl',
@@ -107,6 +115,7 @@ class Command(BaseCommand):
                 'category': 'strength',
                 'muscle_group': 'legs',
                 'equipment': 'machine',
+                'secondary_muscles': [],  # ✅ Empty list
             },
             {
                 'name': 'Calf Raises',
@@ -114,6 +123,7 @@ class Command(BaseCommand):
                 'category': 'strength',
                 'muscle_group': 'legs',
                 'equipment': 'machine',
+                'secondary_muscles': ['calves'],  # ✅ Changed to list
             },
             
             # Shoulders
@@ -123,6 +133,7 @@ class Command(BaseCommand):
                 'category': 'strength',
                 'muscle_group': 'shoulders',
                 'equipment': 'barbell',
+                'secondary_muscles': ['triceps'],  # ✅ Changed to list
             },
             {
                 'name': 'Dumbbell Shoulder Press',
@@ -130,6 +141,7 @@ class Command(BaseCommand):
                 'category': 'strength',
                 'muscle_group': 'shoulders',
                 'equipment': 'dumbbell',
+                'secondary_muscles': ['triceps'],  # ✅ Changed to list
             },
             {
                 'name': 'Lateral Raises',
@@ -137,6 +149,7 @@ class Command(BaseCommand):
                 'category': 'strength',
                 'muscle_group': 'shoulders',
                 'equipment': 'dumbbell',
+                'secondary_muscles': [],  # ✅ Empty list
             },
             {
                 'name': 'Face Pulls',
@@ -144,6 +157,7 @@ class Command(BaseCommand):
                 'category': 'strength',
                 'muscle_group': 'shoulders',
                 'equipment': 'cable',
+                'secondary_muscles': ['back'],  # ✅ Changed to list
             },
             
             # Arms
@@ -153,6 +167,7 @@ class Command(BaseCommand):
                 'category': 'strength',
                 'muscle_group': 'arms',
                 'equipment': 'barbell',
+                'secondary_muscles': ['biceps', 'forearms'],  # ✅ Changed to list
             },
             {
                 'name': 'Tricep Dips',
@@ -160,6 +175,7 @@ class Command(BaseCommand):
                 'category': 'strength',
                 'muscle_group': 'arms',
                 'equipment': 'bodyweight',
+                'secondary_muscles': ['triceps', 'chest'],  # ✅ Changed to list
             },
             {
                 'name': 'Hammer Curls',
@@ -167,6 +183,7 @@ class Command(BaseCommand):
                 'category': 'strength',
                 'muscle_group': 'arms',
                 'equipment': 'dumbbell',
+                'secondary_muscles': ['biceps', 'forearms'],  # ✅ Changed to list
             },
             {
                 'name': 'Tricep Pushdown',
@@ -174,6 +191,7 @@ class Command(BaseCommand):
                 'category': 'strength',
                 'muscle_group': 'arms',
                 'equipment': 'cable',
+                'secondary_muscles': ['triceps'],  # ✅ Changed to list
             },
             
             # Core
@@ -183,6 +201,7 @@ class Command(BaseCommand):
                 'category': 'strength',
                 'muscle_group': 'core',
                 'equipment': 'bodyweight',
+                'secondary_muscles': [],  # ✅ Empty list
             },
             {
                 'name': 'Russian Twists',
@@ -190,6 +209,7 @@ class Command(BaseCommand):
                 'category': 'strength',
                 'muscle_group': 'core',
                 'equipment': 'bodyweight',
+                'secondary_muscles': [],  # ✅ Empty list
             },
             {
                 'name': 'Leg Raises',
@@ -197,6 +217,7 @@ class Command(BaseCommand):
                 'category': 'strength',
                 'muscle_group': 'core',
                 'equipment': 'bodyweight',
+                'secondary_muscles': [],  # ✅ Empty list
             },
             {
                 'name': 'Cable Crunches',
@@ -204,6 +225,7 @@ class Command(BaseCommand):
                 'category': 'strength',
                 'muscle_group': 'core',
                 'equipment': 'cable',
+                'secondary_muscles': [],  # ✅ Empty list
             },
             
             # Cardio
@@ -213,6 +235,7 @@ class Command(BaseCommand):
                 'category': 'cardio',
                 'muscle_group': 'cardio',
                 'equipment': 'bodyweight',
+                'secondary_muscles': [],  # ✅ Empty list
             },
             {
                 'name': 'Cycling',
@@ -220,6 +243,7 @@ class Command(BaseCommand):
                 'category': 'cardio',
                 'muscle_group': 'cardio',
                 'equipment': 'machine',
+                'secondary_muscles': [],  # ✅ Empty list
             },
             {
                 'name': 'Rowing Machine',
@@ -227,6 +251,7 @@ class Command(BaseCommand):
                 'category': 'cardio',
                 'muscle_group': 'full_body',
                 'equipment': 'machine',
+                'secondary_muscles': ['back'],  # ✅ Changed to list
             },
             {
                 'name': 'Jump Rope',
@@ -234,6 +259,7 @@ class Command(BaseCommand):
                 'category': 'cardio',
                 'muscle_group': 'cardio',
                 'equipment': 'other',
+                'secondary_muscles': ['calves'],  # ✅ Changed to list
             },
         ]
 
