@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Play, Pause, Check, X, Plus, Timer } from 'lucide-react';
+import { Check, Plus, Timer } from 'lucide-react';
 import {
   startWorkout,
   getRoutine,
   createSet,
-  getSessionSets,
   completeSession,
 } from '../services/workoutService';
 

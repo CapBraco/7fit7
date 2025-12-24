@@ -51,7 +51,7 @@ export const CreateRoutine = () => {
     name: '',
     category: 'strength',
     muscle_group: 'chest',
-    secondary_muscles: [],
+    secondary_muscles: [] as string[],  // ✅ Fixed: explicitly typed as string[]
     equipment: 'bodyweight',
     description: '',
   });
@@ -105,26 +105,30 @@ export const CreateRoutine = () => {
     if (expandedExercise === index) setExpandedExercise(null);
   };
 
-  const updateExercise = (index: number, field: keyof RoutineExercise, value: any) => {
+  const updateExercise = (index: number, field: keyof RoutineExercise, value: string | number | boolean) => {  // ✅ Fixed: proper value type
     const updated = [...selectedExercises];
     
     // Handle numeric fields - prevent NaN and apply limits
     if (['default_sets', 'default_reps', 'default_rest_seconds'].includes(field)) {
-      value = value === '' || isNaN(value) ? 0 : parseInt(value);
+      const numValue = typeof value === 'string' ? value : String(value);
+      let parsedValue = numValue === '' || isNaN(Number(numValue)) ? 0 : parseInt(numValue);
       // Apply max limits
-      if (field === 'default_sets' && value > 30) value = 30;
-      if (field === 'default_reps' && value > 999) value = 999;
-      if (field === 'default_rest_seconds' && value > 600) value = 600; // Max 10 minutes rest
+      if (field === 'default_sets' && parsedValue > 30) parsedValue = 30;
+      if (field === 'default_reps' && parsedValue > 999) parsedValue = 999;
+      if (field === 'default_rest_seconds' && parsedValue > 600) parsedValue = 600;
+      value = parsedValue;
     }
     if (field === 'default_weight') {
-      value = value === '' || isNaN(value) ? 0 : parseFloat(value);
-      if (value > 999) value = 999; // Max 999kg
+      const numValue = typeof value === 'string' ? value : String(value);
+      let parsedValue = numValue === '' || isNaN(Number(numValue)) ? 0 : parseFloat(numValue);
+      if (parsedValue > 999) parsedValue = 999;
+      value = parsedValue;
     }
     
     updated[index] = { ...updated[index], [field]: value };
     
     // Generate custom sets when number of sets changes and custom sets are enabled
-    if (field === 'default_sets' && updated[index].use_custom_sets && value > 0) {
+    if (field === 'default_sets' && updated[index].use_custom_sets && typeof value === 'number' && value > 0) {
       generateCustomSets(index, value);
     }
     
@@ -196,18 +200,22 @@ export const CreateRoutine = () => {
     setSelectedExercises(updated);
   };
 
-  const updateCustomSet = (exerciseIndex: number, setIndex: number, field: keyof CustomSet, value: any) => {
+  const updateCustomSet = (exerciseIndex: number, setIndex: number, field: keyof CustomSet, value: string | number) => {  // ✅ Fixed: proper value type
     const updated = [...selectedExercises];
     if (updated[exerciseIndex].custom_sets) {
       // Handle numeric fields - prevent NaN and apply limits
       if (['reps', 'rest_seconds'].includes(field)) {
-        value = value === '' || isNaN(value) ? 0 : parseInt(value);
-        if (field === 'reps' && value > 999) value = 999;
-        if (field === 'rest_seconds' && value > 600) value = 600;
+        const numValue = typeof value === 'string' ? value : String(value);
+        let parsedValue = numValue === '' || isNaN(Number(numValue)) ? 0 : parseInt(numValue);
+        if (field === 'reps' && parsedValue > 999) parsedValue = 999;
+        if (field === 'rest_seconds' && parsedValue > 600) parsedValue = 600;
+        value = parsedValue;
       }
       if (field === 'weight') {
-        value = value === '' || isNaN(value) ? 0 : parseFloat(value);
-        if (value > 999) value = 999;
+        const numValue = typeof value === 'string' ? value : String(value);
+        let parsedValue = numValue === '' || isNaN(Number(numValue)) ? 0 : parseFloat(numValue);
+        if (parsedValue > 999) parsedValue = 999;
+        value = parsedValue;
       }
       
       updated[exerciseIndex].custom_sets![setIndex] = {
@@ -750,7 +758,7 @@ export const CreateRoutine = () => {
       {/* Create Exercise Modal */}
       {showCreateExercise && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl max-w-md w-full p-6">
+          <div className="bg-white rounded-xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-bold text-gray-900">Create Custom Exercise</h3>
               <button
