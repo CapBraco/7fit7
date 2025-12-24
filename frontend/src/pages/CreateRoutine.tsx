@@ -336,7 +336,10 @@ export const CreateRoutine = () => {
         name,
         description,
         is_public: isPublic,
-        exercises: selectedExercises.map(({ exercise_details, use_custom_sets, custom_sets, ...rest }) => rest),
+        exercises: selectedExercises.map(({ exercise_details, ...exercise }) => {
+          // Only remove exercise_details, keep everything else including custom_sets
+          return exercise;
+        }),
       };
       await createRoutine(routineData);
       navigate('/workouts');
