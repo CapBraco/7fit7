@@ -1,10 +1,11 @@
-version: '3.8'
+version: "3.8"
 
 services:
   postgres:
     image: postgres:15-alpine
+    container_name: fit7_postgres
     environment:
-      POSTGRES_DB: fittracker_db
+      POSTGRES_DB: fit7_db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
@@ -14,6 +15,7 @@ services:
 
   redis:
     image: redis:7-alpine
+    container_name: fit7_redis
     ports:
       - "6379:6379"
 
