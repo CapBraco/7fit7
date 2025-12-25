@@ -138,6 +138,8 @@ class RoutineExercise(models.Model):
     default_rest_seconds = models.PositiveIntegerField(default=60)
     
     notes = models.TextField(blank=True)
+    use_custom_sets = models.BooleanField(default=False)
+    custom_sets = models.JSONField(default=list, blank=True, null=True)
     
     class Meta:
         ordering = ['order']

@@ -63,7 +63,9 @@ class RoutineExerciseSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'exercise', 'exercise_details', 'order',
             'default_sets', 'default_reps', 'default_weight',
-            'default_rest_seconds', 'notes'
+            'default_rest_seconds', 'notes',
+            'use_custom_sets',
+            'custom_sets',
         ]
 
 
