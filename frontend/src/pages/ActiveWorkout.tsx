@@ -8,6 +8,15 @@ import {
   completeSession,
 } from '../services/workoutService';
 
+interface CustomSet {
+  set_number: number;
+  reps: number;
+  weight: number | string;
+  rest_seconds: number;
+  notes?: string;
+  set_name?: string;
+}
+
 interface Exercise {
   id: number;
   exercise: number;
@@ -18,8 +27,10 @@ interface Exercise {
   };
   default_sets: number;
   default_reps: number;
-  default_weight: number;
+  default_weight: number | string;
   default_rest_seconds: number;
+  use_custom_sets?: boolean;
+  custom_sets?: CustomSet[];
 }
 
 interface SetLog {
@@ -28,6 +39,9 @@ interface SetLog {
   set_number: number;
   reps: number;
   weight: number;
+  rest_seconds?: number;
+  notes?: string;
+  set_name?: string;
   completed: boolean;
 }
 
@@ -119,17 +133,39 @@ export const ActiveWorkout = () => {
 
   const initializeSetsForExercise = (exercise: Exercise) => {
     const newSets: SetLog[] = [];
-    for (let i = 0; i < exercise.default_sets; i++) {
-      newSets.push({
-        exercise: exercise.exercise,
-        set_number: i + 1,
-        reps: exercise.default_reps,
-        weight: parseFloat(exercise.default_weight.toString()) || 0,
-        completed: false,
+    
+    // ✅ Check if exercise has custom sets
+    if (exercise.use_custom_sets && exercise.custom_sets && exercise.custom_sets.length > 0) {
+      // Use custom sets with proper type conversion
+      exercise.custom_sets.forEach((customSet) => {
+        newSets.push({
+          exercise: exercise.exercise,
+          set_number: customSet.set_number,
+          reps: customSet.reps,
+          weight: parseFloat(customSet.weight?.toString() || '0') || 0,
+          rest_seconds: customSet.rest_seconds,
+          notes: customSet.notes || '',
+          set_name: customSet.set_name || '',
+          completed: false,
+        });
       });
+      // Use custom rest time from first set
+      setRestDuration(exercise.custom_sets[0]?.rest_seconds || exercise.default_rest_seconds);
+    } else {
+      // Use default sets
+      for (let i = 0; i < exercise.default_sets; i++) {
+        newSets.push({
+          exercise: exercise.exercise,
+          set_number: i + 1,
+          reps: exercise.default_reps,
+          weight: parseFloat(exercise.default_weight?.toString() || '0') || 0,
+          completed: false,
+        });
+      }
+      setRestDuration(exercise.default_rest_seconds);
     }
+    
     setSets(newSets);
-    setRestDuration(exercise.default_rest_seconds);
   };
 
   const updateSet = (index: number, field: 'reps' | 'weight', value: number) => {
@@ -166,9 +202,12 @@ export const ActiveWorkout = () => {
       updated[index] = { ...updated[index], completed: true, id: savedSet.id };
       setSets(updated);
 
-      // Start rest timer if not last set
+      // ✅ Start rest timer with SET-SPECIFIC rest time
       if (index < sets.length - 1) {
-        setRestTimeLeft(restDuration);
+        const nextSet = sets[index + 1];
+        // Use set-specific rest time if available, otherwise use default
+        const restTime = nextSet.rest_seconds || restDuration;
+        setRestTimeLeft(restTime);
         setIsResting(true);
       }
     } catch (error) {
@@ -191,6 +230,8 @@ export const ActiveWorkout = () => {
         set_number: sets.length + 1,
         reps: lastSet.reps,
         weight: lastSet.weight,
+        rest_seconds: lastSet.rest_seconds,
+        notes: lastSet.notes,
         completed: false,
       },
     ]);
@@ -317,7 +358,10 @@ export const ActiveWorkout = () => {
               }`}
             >
               <div className="flex items-center justify-between mb-3">
-                <span className="text-lg font-semibold">Set {set.set_number}</span>
+                {/* ✅ Show custom set name or default */}
+                <span className="text-lg font-semibold">
+                  {set.set_name || `Set ${set.set_number}`}
+                </span>
                 {set.completed && (
                   <span className="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
                     ✓ Completed
@@ -348,6 +392,21 @@ export const ActiveWorkout = () => {
                       />
                     </div>
                   </div>
+                  
+                  {/* ✅ Show notes if present */}
+                  {set.notes && (
+                    <div className="mb-3 text-sm text-gray-400 italic">
+                      Note: {set.notes}
+                    </div>
+                  )}
+                  
+                  {/* ✅ Show custom rest time if present */}
+                  {set.rest_seconds && set.rest_seconds !== 60 && (
+                    <div className="mb-3 text-sm text-gray-400">
+                      Rest after this set: {set.rest_seconds}s
+                    </div>
+                  )}
+                  
                   <button
                     onClick={() => completeSet(index)}
                     className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold transition flex items-center justify-center space-x-2"
@@ -359,6 +418,7 @@ export const ActiveWorkout = () => {
               ) : (
                 <div className="text-center text-gray-400">
                   {set.reps} reps × {set.weight} kg
+                  {set.notes && <div className="text-sm mt-1">({set.notes})</div>}
                 </div>
               )}
             </div>

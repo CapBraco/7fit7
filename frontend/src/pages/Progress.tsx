@@ -35,7 +35,11 @@ export const Progress = () => {
         getExercises(),
       ]);
       setSessions(sessionsData);
-      setExercises(exercisesData);
+      
+      // ✅ FIX: Extract results from paginated response
+      const exercisesList = exercisesData.results || exercisesData;
+      setExercises(Array.isArray(exercisesList) ? exercisesList : []);
+      
       await loadBodyWeights();
     } catch (error) {
       console.error('Failed to load data:', error);
