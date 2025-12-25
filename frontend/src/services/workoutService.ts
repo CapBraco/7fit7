@@ -86,7 +86,12 @@ export const getSessions = async (params?: {
   end_date?: string;
 }) => {
   const response = await axios.get(`${API_URL}/workouts/sessions/`, { params });
-  return response.data;
+  // ✅ Extract results array from paginated response
+  if (response.data && response.data.results) {
+    return response.data.results;
+  }
+  // Fallback
+  return Array.isArray(response.data) ? response.data : [];
 };
 
 export const getSession = async (id: number) => {
